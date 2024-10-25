@@ -3,12 +3,12 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import javax.swing.AbstractButton;
+import javax.swing.ButtonModel;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author alumno
@@ -20,54 +20,124 @@ public class Proyecto extends javax.swing.JFrame {
      */
     public Proyecto() {
         initComponents();
-        nuevoFormulario();
+        formularioNuevo(false);
+        
+        
+        
     }
     
-    
-    private void nuevoFormulario(){
-       // ----------------------------
-       // Desactivar grupos de botones
-       // ----------------------------
-       desactivarElemento(grupoDiscoDuro, false);
-       desactivarElemento(grupoMemoria, false);
-       desactivarElemento(grupoMonitor, false);
-       desactivarElemento(grupoProcesador, false);
-       
-       // -----------------------------
-       // Desactivar resto de elementos
-       // -----------------------------
-       desactivarElemento(comboLocalidad, false);
-       desactivarElemento(botonAñadir, false);
-       desactivarElemento(botonEliminar, false);
-       desactivarElemento(botonBuscar, false);
-       desactivarElemento(jCheckBox1, false);
-       desactivarElemento(jCheckBox2, false);
-       desactivarElemento(jCheckBox3, false);
-       desactivarElemento(jCheckBox4, false);
+    // Operacion 1
+    // -----------------------------------------
+    // Método para gestionar el formulario nuevo
+    // -----------------------------------------
+    private void formularioNuevo(boolean estado) {
+        // -------------------------------
+        // Gestión de la seleccion inicial
+        // -------------------------------
+        seleccionProductos(procesador2, memoria4, monitor4, discoduro4);
+        seleccionCheckBox(true, false, false, false);
+        // ----------------------------
+        // Desactivar grupos de botones
+        // ----------------------------
+        gestionarGrupos(false);
+
+        // -----------------------------
+        // Desactivar resto de elementos
+        // -----------------------------
+        botonesClientes(estado, estado, estado);
+        gestionarCheckBox(estado);
+        desactivarElemento(comboLocalidad, estado);
+
+    }
+
+    // -----------------------
+    // Gestionar estado grupos
+    // -----------------------
+    public void gestionarGrupos(boolean estado) {
+        desactivarElemento(grupoDiscoDuro, estado);
+        desactivarElemento(grupoMemoria, estado);
+        desactivarElemento(grupoMonitor, estado);
+        desactivarElemento(grupoProcesador, estado);
+    }
+
+    // ---------------------------------
+    // Gestionar estado botones clientes
+    // ---------------------------------
+    public void botonesClientes(boolean anadir, boolean buscar, boolean eliminar) {
+        botonAñadir.setEnabled(anadir);
+        botonBuscar.setEnabled(buscar);
+        botonEliminar.setEnabled(eliminar);
     }
     
+    // ---------------------------
+    // Gestionar estado checkboxes
+    // ---------------------------
+    public void gestionarCheckBox(boolean estado) {
+        desactivarElemento(opcion2, estado);
+        desactivarElemento(opcion1, estado);
+        desactivarElemento(opcion4, estado);
+        desactivarElemento(opcion3, estado);
+    }
+
     // --------------------
     // Desactivar elementos
     // --------------------
-    private void desactivarElemento(javax.swing.JComponent elemento, boolean estado ){
+    private void desactivarElemento(javax.swing.JComponent elemento, boolean estado) {
         elemento.setEnabled(estado);
     }
-    
-        // --------------------
+
+    // --------------------
     // Desactivar elementos
     // --------------------
-    private void desactivarElemento(javax.swing.ButtonGroup bg, boolean estadoBotones ){
+    private void desactivarElemento(javax.swing.ButtonGroup bg, boolean estadoBotones) {
         Enumeration<AbstractButton> botones = bg.getElements(); //Crea un enum con los botones del grupo
-        
+
         Iterator<AbstractButton> iteradorBotones = botones.asIterator();//Crea un iterador con los botones del enum
-        while(iteradorBotones.hasNext()){
-            desactivarElemento(iteradorBotones.next(),false);
+        while (iteradorBotones.hasNext()) {
+            desactivarElemento(iteradorBotones.next(), false);
         }
-        
+
     }
     
-
-
+    // ------------------------------------
+    // Método para establecer una selección
+    // ------------------------------------
+    public void seleccionProductos(
+            javax.swing.JRadioButton procesador,
+            javax.swing.JRadioButton memoria,
+            javax.swing.JRadioButton monitor,
+            javax.swing.JRadioButton discoduro
+            ) {
+        procesador.setSelected(true);
+        memoria.setSelected(true);
+        monitor.setSelected(true);
+        discoduro.setSelected(true);
+     
+    }
+    
+    // --------------------
+    // Selección checkboxes
+    // --------------------
+    public void seleccionCheckBox(boolean estado1, boolean estado2, boolean estado3, boolean estado4){
+        opcion1.setSelected(estado1);
+        opcion2.setSelected(estado2);
+        opcion3.setSelected(estado3);
+        opcion4.setSelected(estado4);
+    }
+    
+    // Operacion 2
+    // -------------------------------------------------------------------
+    // Método que activa el formulario al realizar una acción en el Nombre
+    // -------------------------------------------------------------------
+   
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,26 +169,26 @@ public class Proyecto extends javax.swing.JFrame {
         botonAñadir = new javax.swing.JButton();
         botonBuscar = new javax.swing.JButton();
         botonEliminar = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jCheckBox4 = new javax.swing.JCheckBox();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jRadioButton5 = new javax.swing.JRadioButton();
-        jRadioButton6 = new javax.swing.JRadioButton();
-        jRadioButton7 = new javax.swing.JRadioButton();
-        jRadioButton8 = new javax.swing.JRadioButton();
-        jRadioButton9 = new javax.swing.JRadioButton();
-        jRadioButton10 = new javax.swing.JRadioButton();
-        jRadioButton11 = new javax.swing.JRadioButton();
-        jRadioButton12 = new javax.swing.JRadioButton();
-        jRadioButton13 = new javax.swing.JRadioButton();
-        jRadioButton14 = new javax.swing.JRadioButton();
-        jRadioButton15 = new javax.swing.JRadioButton();
-        jRadioButton16 = new javax.swing.JRadioButton();
+        opcion2 = new javax.swing.JCheckBox();
+        opcion1 = new javax.swing.JCheckBox();
+        opcion4 = new javax.swing.JCheckBox();
+        opcion3 = new javax.swing.JCheckBox();
+        discoduro1 = new javax.swing.JRadioButton();
+        discoduro2 = new javax.swing.JRadioButton();
+        discoduro3 = new javax.swing.JRadioButton();
+        discoduro4 = new javax.swing.JRadioButton();
+        monitor1 = new javax.swing.JRadioButton();
+        monitor2 = new javax.swing.JRadioButton();
+        monitor3 = new javax.swing.JRadioButton();
+        monitor4 = new javax.swing.JRadioButton();
+        memoria4 = new javax.swing.JRadioButton();
+        memoria1 = new javax.swing.JRadioButton();
+        memoria2 = new javax.swing.JRadioButton();
+        memoria3 = new javax.swing.JRadioButton();
+        procesador2 = new javax.swing.JRadioButton();
+        procesador1 = new javax.swing.JRadioButton();
+        procesador4 = new javax.swing.JRadioButton();
+        procesador3 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -176,82 +246,82 @@ public class Proyecto extends javax.swing.JFrame {
 
         botonEliminar.setText("Eliminar");
 
-        jCheckBox1.setText("Wifi");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        opcion2.setText("Wifi");
+        opcion2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                opcion2ActionPerformed(evt);
             }
         });
 
-        jCheckBox2.setSelected(true);
-        jCheckBox2.setText("Grabador DVD");
+        opcion1.setSelected(true);
+        opcion1.setText("Grabador DVD");
 
-        jCheckBox3.setText("Backup/Restore");
-        jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
+        opcion4.setText("Backup/Restore");
+        opcion4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox3ActionPerformed(evt);
+                opcion4ActionPerformed(evt);
             }
         });
 
-        jCheckBox4.setText("Sintonizador TV");
-        jCheckBox4.setToolTipText("");
-        jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
+        opcion3.setText("Sintonizador TV");
+        opcion3.setToolTipText("");
+        opcion3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox4ActionPerformed(evt);
+                opcion3ActionPerformed(evt);
             }
         });
 
-        grupoDiscoDuro.add(jRadioButton1);
-        jRadioButton1.setText("60  Gb");
+        grupoDiscoDuro.add(discoduro1);
+        discoduro1.setText("60  Gb");
 
-        grupoDiscoDuro.add(jRadioButton2);
-        jRadioButton2.setText("80  Gb");
+        grupoDiscoDuro.add(discoduro2);
+        discoduro2.setText("80  Gb");
 
-        grupoDiscoDuro.add(jRadioButton3);
-        jRadioButton3.setText("120 Gb");
+        grupoDiscoDuro.add(discoduro3);
+        discoduro3.setText("120 Gb");
 
-        grupoDiscoDuro.add(jRadioButton4);
-        jRadioButton4.setSelected(true);
-        jRadioButton4.setText("200 Gb");
+        grupoDiscoDuro.add(discoduro4);
+        discoduro4.setSelected(true);
+        discoduro4.setText("200 Gb");
 
-        grupoMonitor.add(jRadioButton5);
-        jRadioButton5.setText("15''");
+        grupoMonitor.add(monitor1);
+        monitor1.setText("15''");
 
-        grupoMonitor.add(jRadioButton6);
-        jRadioButton6.setText("17''");
+        grupoMonitor.add(monitor2);
+        monitor2.setText("17''");
 
-        grupoMonitor.add(jRadioButton7);
-        jRadioButton7.setText("TFT 15''");
+        grupoMonitor.add(monitor3);
+        monitor3.setText("TFT 15''");
 
-        grupoMonitor.add(jRadioButton8);
-        jRadioButton8.setSelected(true);
-        jRadioButton8.setText("TFT 17''");
+        grupoMonitor.add(monitor4);
+        monitor4.setSelected(true);
+        monitor4.setText("TFT 17''");
 
-        grupoMemoria.add(jRadioButton9);
-        jRadioButton9.setSelected(true);
-        jRadioButton9.setText("1024 Mb");
+        grupoMemoria.add(memoria4);
+        memoria4.setSelected(true);
+        memoria4.setText("1024 Mb");
 
-        grupoMemoria.add(jRadioButton10);
-        jRadioButton10.setText("128   Mb");
+        grupoMemoria.add(memoria1);
+        memoria1.setText("128   Mb");
 
-        grupoMemoria.add(jRadioButton11);
-        jRadioButton11.setText("256   Mb");
+        grupoMemoria.add(memoria2);
+        memoria2.setText("256   Mb");
 
-        grupoMemoria.add(jRadioButton12);
-        jRadioButton12.setText("512   Mb");
+        grupoMemoria.add(memoria3);
+        memoria3.setText("512   Mb");
 
-        grupoProcesador.add(jRadioButton13);
-        jRadioButton13.setSelected(true);
-        jRadioButton13.setText("P4 3.2 Gb");
+        grupoProcesador.add(procesador2);
+        procesador2.setSelected(true);
+        procesador2.setText("P4 3.2 Gb");
 
-        grupoProcesador.add(jRadioButton14);
-        jRadioButton14.setText("P4 3.0 Gb");
+        grupoProcesador.add(procesador1);
+        procesador1.setText("P4 3.0 Gb");
 
-        grupoProcesador.add(jRadioButton15);
-        jRadioButton15.setText("AMD 650");
+        grupoProcesador.add(procesador4);
+        procesador4.setText("AMD 650");
 
-        grupoProcesador.add(jRadioButton16);
-        jRadioButton16.setText("P4 Celeron");
+        grupoProcesador.add(procesador3);
+        procesador3.setText("P4 Celeron");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -261,46 +331,47 @@ public class Proyecto extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jRadioButton15, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jRadioButton14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jRadioButton13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jRadioButton16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(procesador4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(procesador1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(procesador2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(procesador3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jRadioButton12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jRadioButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jRadioButton11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jRadioButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addGap(50, 50, 50)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(22, 22, 22)
+                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(memoria1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(memoria2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(memoria3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(memoria4, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(monitor1)
                                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jRadioButton6)
-                                    .addComponent(jRadioButton5)
-                                    .addComponent(jRadioButton7)
-                                    .addComponent(jRadioButton8))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jRadioButton2)
-                                    .addComponent(jRadioButton1)
-                                    .addComponent(jRadioButton3)
-                                    .addComponent(jRadioButton4))
+                                    .addComponent(monitor2)
+                                    .addComponent(monitor3)
+                                    .addComponent(monitor4))
                                 .addGap(90, 90, 90)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBox2)
+                                    .addComponent(discoduro2)
+                                    .addComponent(discoduro1)
+                                    .addComponent(discoduro3)
+                                    .addComponent(discoduro4)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(59, 59, 59)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(opcion1)
                                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jCheckBox1)
-                                    .addComponent(jCheckBox3)
-                                    .addComponent(jCheckBox4))
+                                    .addComponent(opcion2)
+                                    .addComponent(opcion4)
+                                    .addComponent(opcion3))
                                 .addGap(28, 28, 28))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -351,44 +422,44 @@ public class Proyecto extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox2)
-                            .addComponent(jRadioButton1))
+                            .addComponent(opcion1)
+                            .addComponent(discoduro1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox1)
-                            .addComponent(jRadioButton2))
+                            .addComponent(opcion2)
+                            .addComponent(discoduro2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox4)
-                            .addComponent(jRadioButton3))
+                            .addComponent(opcion3)
+                            .addComponent(discoduro3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox3)
-                            .addComponent(jRadioButton4)))
+                            .addComponent(opcion4)
+                            .addComponent(discoduro4)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jRadioButton5)
+                        .addComponent(monitor1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton6)
+                        .addComponent(monitor2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton8))
+                        .addComponent(monitor3)
+                        .addGap(4, 4, 4)
+                        .addComponent(monitor4))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jRadioButton10)
+                        .addComponent(memoria1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton11)
+                        .addComponent(memoria2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton12)
+                        .addComponent(memoria3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton9))
+                        .addComponent(memoria4))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jRadioButton14)
+                        .addComponent(procesador1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton13)
+                        .addComponent(procesador2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton16)
+                        .addComponent(procesador3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton15)))
+                        .addComponent(procesador4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -405,27 +476,27 @@ public class Proyecto extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void opcion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcion2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_opcion2ActionPerformed
 
-    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
+    private void opcion4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcion4ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox3ActionPerformed
+    }//GEN-LAST:event_opcion4ActionPerformed
 
-    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
+    private void opcion3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcion3ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox4ActionPerformed
+    }//GEN-LAST:event_opcion3ActionPerformed
 
     private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
         // TODO add your handling code here:
@@ -478,14 +549,14 @@ public class Proyecto extends javax.swing.JFrame {
     private javax.swing.JButton botonSalir;
     private javax.swing.JTextField campoNombre;
     private javax.swing.JComboBox<String> comboLocalidad;
+    private javax.swing.JRadioButton discoduro1;
+    private javax.swing.JRadioButton discoduro2;
+    private javax.swing.JRadioButton discoduro3;
+    private javax.swing.JRadioButton discoduro4;
     private javax.swing.ButtonGroup grupoDiscoDuro;
     private javax.swing.ButtonGroup grupoMemoria;
     private javax.swing.ButtonGroup grupoMonitor;
     private javax.swing.ButtonGroup grupoProcesador;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -495,23 +566,23 @@ public class Proyecto extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton10;
-    private javax.swing.JRadioButton jRadioButton11;
-    private javax.swing.JRadioButton jRadioButton12;
-    private javax.swing.JRadioButton jRadioButton13;
-    private javax.swing.JRadioButton jRadioButton14;
-    private javax.swing.JRadioButton jRadioButton15;
-    private javax.swing.JRadioButton jRadioButton16;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JRadioButton jRadioButton5;
-    private javax.swing.JRadioButton jRadioButton6;
-    private javax.swing.JRadioButton jRadioButton7;
-    private javax.swing.JRadioButton jRadioButton8;
-    private javax.swing.JRadioButton jRadioButton9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<String> listaClientes;
+    private javax.swing.JRadioButton memoria1;
+    private javax.swing.JRadioButton memoria2;
+    private javax.swing.JRadioButton memoria3;
+    private javax.swing.JRadioButton memoria4;
+    private javax.swing.JRadioButton monitor1;
+    private javax.swing.JRadioButton monitor2;
+    private javax.swing.JRadioButton monitor3;
+    private javax.swing.JRadioButton monitor4;
+    private javax.swing.JCheckBox opcion1;
+    private javax.swing.JCheckBox opcion2;
+    private javax.swing.JCheckBox opcion3;
+    private javax.swing.JCheckBox opcion4;
+    private javax.swing.JRadioButton procesador1;
+    private javax.swing.JRadioButton procesador2;
+    private javax.swing.JRadioButton procesador3;
+    private javax.swing.JRadioButton procesador4;
     // End of variables declaration//GEN-END:variables
 }
