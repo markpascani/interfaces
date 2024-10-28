@@ -3,6 +3,7 @@
  */
 
 package com.mycompany.proyecto;
+import interfaz.Pepito;
 
 /**
  *
@@ -11,6 +12,7 @@ package com.mycompany.proyecto;
 public class Proyecto {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        Pepito pepa = new Pepito();
+        pepa.setVisible(true);
     }
 }

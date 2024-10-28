@@ -1,10 +1,12 @@
+package interfaz;
 
-import java.util.ArrayList;
+import com.mycompany.proyecto.Venta;
 import java.util.Enumeration;
 import java.util.Iterator;
 import javax.swing.AbstractButton;
-import javax.swing.ButtonModel;
 import java.awt.event.KeyEvent;
+import java.util.Vector;
+import javax.swing.JOptionPane;
 
 
 /*
@@ -15,15 +17,16 @@ import java.awt.event.KeyEvent;
  *
  * @author alumno
  */
-public class Proyecto extends javax.swing.JFrame {
-
+public class Pepito extends javax.swing.JFrame {
+    static Vector<Venta> v = new Vector();
+    
+    
     /**
      * Creates new form Proyecto
      */
-    public Proyecto() {
+    public Pepito() {
         initComponents();
         formularioNuevo(false);
-
 
     }
 
@@ -74,8 +77,8 @@ public class Proyecto extends javax.swing.JFrame {
     // Gestionar estado checkboxes
     // ---------------------------
     public void gestionarCheckBox(boolean estado) {
-        desactivarElemento(opcion2, estado);
         desactivarElemento(opcion1, estado);
+        desactivarElemento(opcion2, estado);
         desactivarElemento(opcion4, estado);
         desactivarElemento(opcion3, estado);
     }
@@ -126,8 +129,6 @@ public class Proyecto extends javax.swing.JFrame {
         opcion4.setSelected(estado4);
 
     }
-
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -208,6 +209,7 @@ public class Proyecto extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Lista de clientes");
 
+        listaClientes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         listaClientes.setToolTipText("");
         jScrollPane1.setViewportView(listaClientes);
 
@@ -237,6 +239,11 @@ public class Proyecto extends javax.swing.JFrame {
 
         botonAñadir.setText("Añadir");
         botonAñadir.setToolTipText("");
+        botonAñadir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonAñadirActionPerformed(evt);
+            }
+        });
 
         botonBuscar.setText("Buscar");
 
@@ -502,10 +509,10 @@ public class Proyecto extends javax.swing.JFrame {
     }//GEN-LAST:event_campoNombreActionPerformed
 
     private void campoNombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoNombreKeyPressed
-    // Operacion 2
-    // -------------------------------------------------------------------
-    // Método que activa el formulario al realizar una acción en el Nombre
-    // -------------------------------------------------------------------
+        // Operacion 2
+        // -------------------------------------------------------------------
+        // Método que activa el formulario al realizar una acción en el Nombre
+        // -------------------------------------------------------------------
         String nombre = campoNombre.getText();
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !nombre.isEmpty() && nombre.length() <= 15) {
             // ----------------------------
@@ -519,16 +526,44 @@ public class Proyecto extends javax.swing.JFrame {
             botonesClientes(true, true, false);
             gestionarCheckBox(true);
             desactivarElemento(comboLocalidad, true);
-            
+
             //Foco sobre localidad
             comboLocalidad.grabFocus();
 
         }
-    
+
     }//GEN-LAST:event_campoNombreKeyPressed
+
+    private void botonAñadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAñadirActionPerformed
+        String nombre = campoNombre.getText();
+        if (comprobarNombre(nombre)) {
+            JOptionPane.showMessageDialog(this, "Nombre no válido", "Error", JOptionPane.ERROR_MESSAGE);
+            campoNombre.grabFocus();
+        } else {
+            v.add(cargarVenta());
+            
+        }
+    }//GEN-LAST:event_botonAñadirActionPerformed
+
+    private Venta cargarVenta(){
+        String nombre = campoNombre.getText();
+        String localidad = comboLocalidad.getSelectedItem().toString();
+        boolean[] seleccionProductos = {opcion1.isSelected(),
+                                        opcion2.isSelected(), 
+                                        opcion3.isSelected(), 
+                                        opcion4.isSelected()};
+        javax.swing.ButtonModel[] listaCompra = {grupoDiscoDuro.getSelection(), 
+                                                 grupoMemoria.getSelection(), 
+                                                 grupoMonitor.getSelection(),
+                                                 grupoProcesador.getSelection()};
+        Venta venta = new Venta(nombre, localidad, seleccionProductos, listaCompra);
+        return venta;
+    }
     
-    
-    
+    private boolean comprobarNombre(String nombre) {
+        return (nombre.isEmpty() || nombre.length() > 15);
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -546,20 +581,21 @@ public class Proyecto extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Proyecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Pepito.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Proyecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Pepito.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Proyecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Pepito.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Proyecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Pepito.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Proyecto().setVisible(true);
+                new Pepito().setVisible(true);
             }
         });
     }
