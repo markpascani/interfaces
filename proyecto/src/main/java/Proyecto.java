@@ -4,6 +4,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
+import java.awt.event.KeyEvent;
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -21,11 +23,10 @@ public class Proyecto extends javax.swing.JFrame {
     public Proyecto() {
         initComponents();
         formularioNuevo(false);
-        
-        
-        
+
+
     }
-    
+
     // Operacion 1
     // -----------------------------------------
     // Método para gestionar el formulario nuevo
@@ -68,7 +69,7 @@ public class Proyecto extends javax.swing.JFrame {
         botonBuscar.setEnabled(buscar);
         botonEliminar.setEnabled(eliminar);
     }
-    
+
     // ---------------------------
     // Gestionar estado checkboxes
     // ---------------------------
@@ -94,11 +95,11 @@ public class Proyecto extends javax.swing.JFrame {
 
         Iterator<AbstractButton> iteradorBotones = botones.asIterator();//Crea un iterador con los botones del enum
         while (iteradorBotones.hasNext()) {
-            desactivarElemento(iteradorBotones.next(), false);
+            desactivarElemento(iteradorBotones.next(), estadoBotones);
         }
 
     }
-    
+
     // ------------------------------------
     // Método para establecer una selección
     // ------------------------------------
@@ -107,37 +108,27 @@ public class Proyecto extends javax.swing.JFrame {
             javax.swing.JRadioButton memoria,
             javax.swing.JRadioButton monitor,
             javax.swing.JRadioButton discoduro
-            ) {
+    ) {
         procesador.setSelected(true);
         memoria.setSelected(true);
         monitor.setSelected(true);
         discoduro.setSelected(true);
-     
+
     }
-    
+
     // --------------------
     // Selección checkboxes
     // --------------------
-    public void seleccionCheckBox(boolean estado1, boolean estado2, boolean estado3, boolean estado4){
+    public void seleccionCheckBox(boolean estado1, boolean estado2, boolean estado3, boolean estado4) {
         opcion1.setSelected(estado1);
         opcion2.setSelected(estado2);
         opcion3.setSelected(estado3);
         opcion4.setSelected(estado4);
+
     }
+
     
-    // Operacion 2
-    // -------------------------------------------------------------------
-    // Método que activa el formulario al realizar una acción en el Nombre
-    // -------------------------------------------------------------------
-   
-    
-    
-    
-    
-    
-    
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -201,6 +192,11 @@ public class Proyecto extends javax.swing.JFrame {
         campoNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoNombreActionPerformed(evt);
+            }
+        });
+        campoNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                campoNombreKeyPressed(evt);
             }
         });
 
@@ -334,11 +330,10 @@ public class Proyecto extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(procesador4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(procesador1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(procesador2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(procesador3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(procesador4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(procesador1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(procesador2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(procesador3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -506,6 +501,34 @@ public class Proyecto extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_campoNombreActionPerformed
 
+    private void campoNombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoNombreKeyPressed
+    // Operacion 2
+    // -------------------------------------------------------------------
+    // Método que activa el formulario al realizar una acción en el Nombre
+    // -------------------------------------------------------------------
+        String nombre = campoNombre.getText();
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !nombre.isEmpty() && nombre.length() <= 15) {
+            // ----------------------------
+            // Desactivar grupos de botones
+            // ----------------------------
+            gestionarGrupos(true);
+
+            // -----------------------------
+            // Desactivar resto de elementos
+            // -----------------------------
+            botonesClientes(true, true, false);
+            gestionarCheckBox(true);
+            desactivarElemento(comboLocalidad, true);
+            
+            //Foco sobre localidad
+            comboLocalidad.grabFocus();
+
+        }
+    
+    }//GEN-LAST:event_campoNombreKeyPressed
+    
+    
+    
     /**
      * @param args the command line arguments
      */
