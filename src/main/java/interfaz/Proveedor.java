@@ -1,3 +1,8 @@
+package interfaz;
+
+
+import interfaz.Clientes;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -7,12 +12,12 @@
  *
  * @author alumno
  */
-public class Proyecto extends javax.swing.JFrame {
+public class Proveedor extends javax.swing.JFrame {
 
     /**
      * Creates new form Proyecto
      */
-    public Proyecto() {
+    public Proveedor() {
         initComponents();
     }
 
@@ -44,7 +49,7 @@ public class Proyecto extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         campoMovil = new javax.swing.JTextField();
-        campoTotalVentas = new javax.swing.JTextField();
+        campoTotalCompras = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         campoEmail = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
@@ -53,19 +58,6 @@ public class Proyecto extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        menuMantenimiento = new javax.swing.JMenu();
-        menuClientes = new javax.swing.JMenuItem();
-        menuProveedores = new javax.swing.JMenuItem();
-        menuArticulos = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        menuConsultas = new javax.swing.JMenu();
-        menuPorCodigo = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,7 +83,7 @@ public class Proyecto extends javax.swing.JFrame {
 
         jLabel11.setText("e-mail");
 
-        jLabel12.setText("Total ventas");
+        jLabel12.setText("Total compras");
 
         jButton1.setText("Aceptar");
         jButton1.setEnabled(false);
@@ -102,53 +94,13 @@ public class Proyecto extends javax.swing.JFrame {
         jButton3.setText("Cancelar");
         jButton3.setEnabled(false);
 
-        menuMantenimiento.setText("Mantenimiento");
-
-        menuClientes.setText("Altas");
-        menuClientes.setVerifyInputWhenFocusTarget(false);
-        menuMantenimiento.add(menuClientes);
-
-        menuProveedores.setText("Bajas");
-        menuMantenimiento.add(menuProveedores);
-
-        menuArticulos.setText("Modificaciones");
-        menuMantenimiento.add(menuArticulos);
-        menuMantenimiento.add(jSeparator1);
-
-        jMenuItem1.setText("Volver");
-        menuMantenimiento.add(jMenuItem1);
-
-        jMenuBar1.add(menuMantenimiento);
-
-        menuConsultas.setText("Consultas");
-
-        menuPorCodigo.setText("Por código");
-        menuConsultas.add(menuPorCodigo);
-
-        jMenu1.setText("Listados");
-
-        jMenuItem3.setText("Por código");
-        jMenu1.add(jMenuItem3);
-
-        jMenuItem4.setText("Entre códigos");
-        jMenu1.add(jMenuItem4);
-
-        jMenuItem2.setText("Gráficos");
-        jMenu1.add(jMenuItem2);
-
-        menuConsultas.add(jMenu1);
-
-        jMenuBar1.add(menuConsultas);
-
-        setJMenuBar(jMenuBar1);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5)
                     .addComponent(campoDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
@@ -193,7 +145,7 @@ public class Proyecto extends javax.swing.JFrame {
                         .addGap(64, 64, 64)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
-                            .addComponent(campoTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(campoTotalCompras))))
                 .addContainerGap(59, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -251,8 +203,8 @@ public class Proyecto extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(campoEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(campoTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                    .addComponent(campoTotalCompras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
@@ -280,20 +232,21 @@ public class Proyecto extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Proyecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Proyecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Proyecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Proyecto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Proyecto().setVisible(true);
+                new Clientes().setVisible(true);
             }
         });
     }
@@ -310,7 +263,7 @@ public class Proyecto extends javax.swing.JFrame {
     private javax.swing.JTextField campoNIF;
     private javax.swing.JTextField campoNombre;
     private javax.swing.JTextField campoTelefono;
-    private javax.swing.JTextField campoTotalVentas;
+    private javax.swing.JTextField campoTotalCompras;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -326,19 +279,6 @@ public class Proyecto extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTextField letraNif;
-    private javax.swing.JMenuItem menuArticulos;
-    private javax.swing.JMenuItem menuClientes;
-    private javax.swing.JMenu menuConsultas;
-    private javax.swing.JMenu menuMantenimiento;
-    private javax.swing.JMenuItem menuPorCodigo;
-    private javax.swing.JMenuItem menuProveedores;
     // End of variables declaration//GEN-END:variables
 }
