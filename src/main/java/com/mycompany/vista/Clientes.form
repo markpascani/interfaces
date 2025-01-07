@@ -8,26 +8,35 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Mantenimiento"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="menuMantenimientoMousePressed"/>
+          </Events>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="menuClientes">
+            <MenuItem class="javax.swing.JMenuItem" name="botonAlta">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Altas"/>
                 <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="botonAltaMousePressed"/>
+              </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="menuProveedores">
+            <MenuItem class="javax.swing.JMenuItem" name="botonBaja">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Bajas"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="botonBajaMousePressed"/>
+              </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="menuArticulos">
+            <MenuItem class="javax.swing.JMenuItem" name="botonEditar">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Modificaciones"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+            <MenuItem class="javax.swing.JMenuItem" name="botonVolver">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Volver"/>
               </Properties>
@@ -161,11 +170,11 @@
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="jButton1" min="-2" pref="85" max="-2" attributes="0"/>
+              <Component id="botonAceptar" min="-2" pref="85" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-              <Component id="jButton3" min="-2" pref="85" max="-2" attributes="0"/>
+              <Component id="botonCancelar" min="-2" pref="85" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jButton2" min="-2" pref="85" max="-2" attributes="0"/>
+              <Component id="botonSalir" min="-2" pref="85" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -228,9 +237,9 @@
               </Group>
               <EmptySpace pref="45" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="botonAceptar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="botonSalir" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="botonCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
           </Group>
@@ -239,6 +248,9 @@
   </Layout>
   <SubComponents>
     <Component class="javax.swing.JTextField" name="campoCodigo">
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="campoCodigoKeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="campoNIF">
     </Component>
@@ -324,19 +336,19 @@
         <Property name="text" type="java.lang.String" value="Total ventas"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="botonAceptar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Aceptar"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="botonSalir">
       <Properties>
         <Property name="text" type="java.lang.String" value="Salir"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton3">
+    <Component class="javax.swing.JButton" name="botonCancelar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Cancelar"/>
         <Property name="enabled" type="boolean" value="false"/>

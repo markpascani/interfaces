@@ -1,20 +1,31 @@
 package com.mycompany.vista;
 
+import com.mycompany.controlador.Controlador;
+import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
+import com.mycompany.modelo.dao.interfaces.ClienteDAO;
+import com.mycompany.modelo.entidades.Cliente;
+import java.awt.event.KeyEvent;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author alumno
  */
 public class Clientes extends javax.swing.JFrame {
 
+    private final Controlador controlador;
+    private boolean esAlta = false;
+    private boolean esBaja = false;
+    private boolean esModificacion = false;
+
     /**
      * Creates new form Proyecto
      */
-    public Clientes() {
+    public Clientes(Controlador controlador) {
+        this.controlador = controlador;
         initComponents();
     }
 
@@ -52,16 +63,16 @@ public class Clientes extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         campoFax1 = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        botonAceptar = new javax.swing.JButton();
+        botonSalir = new javax.swing.JButton();
+        botonCancelar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuMantenimiento = new javax.swing.JMenu();
-        menuClientes = new javax.swing.JMenuItem();
-        menuProveedores = new javax.swing.JMenuItem();
-        menuArticulos = new javax.swing.JMenuItem();
+        botonAlta = new javax.swing.JMenuItem();
+        botonBaja = new javax.swing.JMenuItem();
+        botonEditar = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        botonVolver = new javax.swing.JMenuItem();
         menuConsultas = new javax.swing.JMenu();
         menuPorCodigo = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
@@ -70,6 +81,12 @@ public class Clientes extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        campoCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                campoCodigoKeyPressed(evt);
+            }
+        });
 
         jLabel1.setText("Código");
 
@@ -95,30 +112,45 @@ public class Clientes extends javax.swing.JFrame {
 
         jLabel12.setText("Total ventas");
 
-        jButton1.setText("Aceptar");
-        jButton1.setEnabled(false);
+        botonAceptar.setText("Aceptar");
+        botonAceptar.setEnabled(false);
 
-        jButton2.setText("Salir");
-        jButton2.setEnabled(false);
+        botonSalir.setText("Salir");
+        botonSalir.setEnabled(false);
 
-        jButton3.setText("Cancelar");
-        jButton3.setEnabled(false);
+        botonCancelar.setText("Cancelar");
+        botonCancelar.setEnabled(false);
 
         menuMantenimiento.setText("Mantenimiento");
+        menuMantenimiento.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                menuMantenimientoMousePressed(evt);
+            }
+        });
 
-        menuClientes.setText("Altas");
-        menuClientes.setVerifyInputWhenFocusTarget(false);
-        menuMantenimiento.add(menuClientes);
+        botonAlta.setText("Altas");
+        botonAlta.setVerifyInputWhenFocusTarget(false);
+        botonAlta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                botonAltaMousePressed(evt);
+            }
+        });
+        menuMantenimiento.add(botonAlta);
 
-        menuProveedores.setText("Bajas");
-        menuMantenimiento.add(menuProveedores);
+        botonBaja.setText("Bajas");
+        botonBaja.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                botonBajaMousePressed(evt);
+            }
+        });
+        menuMantenimiento.add(botonBaja);
 
-        menuArticulos.setText("Modificaciones");
-        menuMantenimiento.add(menuArticulos);
+        botonEditar.setText("Modificaciones");
+        menuMantenimiento.add(botonEditar);
         menuMantenimiento.add(jSeparator1);
 
-        jMenuItem1.setText("Volver");
-        menuMantenimiento.add(jMenuItem1);
+        botonVolver.setText("Volver");
+        menuMantenimiento.add(botonVolver);
 
         jMenuBar1.add(menuMantenimiento);
 
@@ -199,11 +231,11 @@ public class Clientes extends javax.swing.JFrame {
                 .addContainerGap(59, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(botonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(botonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(botonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
         layout.setVerticalGroup(
@@ -256,19 +288,70 @@ public class Clientes extends javax.swing.JFrame {
                     .addComponent(campoTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(botonAceptar)
+                    .addComponent(botonSalir)
+                    .addComponent(botonCancelar))
                 .addGap(31, 31, 31))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void botonAltaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonAltaMousePressed
+        // TODO add your handling code here:
+
+        //Se limpian los campos y se deja habilitado solo el campo codigo
+        limpiarCampos();
+        deshabilitarCampos();
+        esAlta = true;
+    }//GEN-LAST:event_botonAltaMousePressed
+
+    private void botonBajaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonBajaMousePressed
+        // TODO add your handling code here:
+        //Se limpian los campos y se deja habilitado solo el campo codigo
+        limpiarCampos();
+        deshabilitarCampos();
+        esBaja = true;
+    }//GEN-LAST:event_botonBajaMousePressed
+
+    private void campoCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoCodigoKeyPressed
+        // TODO add your handling code here:
+        int codigoCliente;
+        boolean existencia;
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !campoCodigo.getText().isEmpty()) {
+            codigoCliente = Integer.parseInt(campoCodigo.getText());
+            boolean existeCodigo = controlador.comprobarExistenciaCliente(codigoCliente);
+            
+            if(existeCodigo){
+          
+                if(esBaja) {
+                    bajaCliente(codigoCliente);
+                    esBaja = false;
+                    limpiarCampos();
+                }else if(esModificacion){
+                    habilitarAlta();
+                    cargarCliente(codigoCliente); 
+                }
+            }
+            
+
+        }
+    }//GEN-LAST:event_campoCodigoKeyPressed
+
+    private void menuMantenimientoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuMantenimientoMousePressed
+        // TODO add your handling code here:
+        limpiarCampos();
+        deshabilitarCampos();
+        esModificacion = true;
+    }//GEN-LAST:event_menuMantenimientoMousePressed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        ClienteDAO clienteDAO = new ClienteDAOImpl();
+        Controlador controlador = new Controlador(clienteDAO);
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -296,12 +379,19 @@ public class Clientes extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Clientes().setVisible(true);
+                new Clientes(controlador).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonAceptar;
+    private javax.swing.JMenuItem botonAlta;
+    private javax.swing.JMenuItem botonBaja;
+    private javax.swing.JButton botonCancelar;
+    private javax.swing.JMenuItem botonEditar;
+    private javax.swing.JButton botonSalir;
+    private javax.swing.JMenuItem botonVolver;
     private javax.swing.JTextField campoApellidos;
     private javax.swing.JTextField campoCP;
     private javax.swing.JTextField campoCodigo;
@@ -314,9 +404,6 @@ public class Clientes extends javax.swing.JFrame {
     private javax.swing.JTextField campoNombre;
     private javax.swing.JTextField campoTelefono;
     private javax.swing.JTextField campoTotalVentas;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -331,17 +418,92 @@ public class Clientes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTextField letraNif;
-    private javax.swing.JMenuItem menuArticulos;
-    private javax.swing.JMenuItem menuClientes;
     private javax.swing.JMenu menuConsultas;
     private javax.swing.JMenu menuMantenimiento;
     private javax.swing.JMenuItem menuPorCodigo;
-    private javax.swing.JMenuItem menuProveedores;
     // End of variables declaration//GEN-END:variables
+
+    private void limpiarCampos() {
+        campoApellidos.setText("");
+        campoNombre.setText("");
+        letraNif.setText("");
+        campoCodigo.setText("");
+        campoDomicilio.setText("");
+        campoLocalidad.setText("");
+        campoCP.setText("");
+        campoTelefono.setText("");
+        campoMovil.setText("");
+        campoFax1.setText("");
+        campoTotalVentas.setText("");
+    }
+
+    private void deshabilitarCampos() {
+        campoApellidos.setEnabled(false);
+        campoNombre.setEnabled(false);
+        letraNif.setEnabled(false);
+        campoDomicilio.setEnabled(false);
+        campoLocalidad.setEnabled(false);
+        campoCP.setEnabled(false);
+        campoTelefono.setEnabled(false);
+        campoMovil.setEnabled(false);
+        campoFax1.setEnabled(false);
+        campoTotalVentas.setEnabled(false);
+        botonAceptar.setEnabled(false);
+        botonCancelar.setEnabled(false);
+        botonSalir.setEnabled(false);
+        campoEmail.setEnabled(false);
+        campoNIF.setEnabled(false);
+
+        campoCodigo.setEnabled(true);
+        campoCodigo.grabFocus();
+    }
+
+    private void habilitarAlta() {
+        campoApellidos.setEnabled(true);
+        campoNombre.setEnabled(true);
+        letraNif.setEnabled(true);
+        campoDomicilio.setEnabled(true);
+        campoLocalidad.setEnabled(true);
+        campoCP.setEnabled(true);
+        campoTelefono.setEnabled(true);
+        campoMovil.setEnabled(true);
+        campoFax1.setEnabled(true);
+        campoTotalVentas.setEnabled(false);
+        botonAceptar.setEnabled(true);
+        botonCancelar.setEnabled(true);
+        botonSalir.setEnabled(true);
+
+        campoCodigo.setEnabled(false);
+        campoApellidos.grabFocus();
+    }
+
+    private void bajaCliente(int codigoCliente) {
+        if(controlador.eliminarCliente(codigoCliente)){
+            javax.swing.JOptionPane.showMessageDialog(this, "Eliminado con exito.");
+        }else{
+            javax.swing.JOptionPane.showMessageDialog(this, "Ocurrio un error, no se ha eliminado.");
+        };
+    }
+
+    private void cargarCliente(int codigoCliente) {
+        Cliente cliente = controlador.obtenerCliente(codigoCliente);
+        campoApellidos.setText(cliente.getApellidos());
+        campoNombre.setText(cliente.getNombre());
+        letraNif.setText(cliente.getNif());
+        campoDomicilio.setText(cliente.getDomicilio());
+        campoLocalidad.setText(cliente.getLocalidad());
+        campoCP.setText(cliente.getCodigoPostal());
+        campoTelefono.setText(cliente.getTelefono());
+        campoMovil.setText(cliente.getMovil());
+        campoFax1.setText(cliente.getFax());
+        campoEmail.setText(cliente.getEmail());
+        campoTotalVentas.setText(String.valueOf(cliente.getTotalVentas()));
+        
+    }
+
 }

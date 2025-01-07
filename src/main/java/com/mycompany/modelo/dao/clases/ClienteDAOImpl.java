@@ -21,7 +21,7 @@ public class ClienteDAOImpl implements ClienteDAO{
 
     @Override
     public boolean insertarCliente(Cliente cliente) {
-        String sql = "INSERT INTO Cliente "
+        String sql = "INSERT INTO Clientes "
                 + "(codigo, nif, apellidos, nombre, domicilio, codigo_postal, localidad, telefono, movil, fax, email, total_venta) "
                 + "values (?,?,?,?,?,?,?,?,?,?,?,?)";
         try(Connection connection = JDBC.getConnection();
@@ -50,7 +50,7 @@ public class ClienteDAOImpl implements ClienteDAO{
 
     @Override
     public boolean borrarCliente(int codigoCliente) {
-        String sql = "DELETE FROM Cliente WHERE id = ?";
+        String sql = "DELETE FROM Clientes WHERE id = ?";
         try(Connection connection = JDBC.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setInt(1, codigoCliente);
@@ -95,7 +95,7 @@ public class ClienteDAOImpl implements ClienteDAO{
 
     @Override
     public Cliente obtenerCliente(int codigoCliente) {
-        Cliente cliente = null;
+        Cliente cliente = new Cliente();
         String sql = "SELECT codigo, nif, apellidos, nombre, domicilio, codigo_postal, localidad, telefono, movil, fax, email, total_venta"
                 + " FROM Clientes WHERE "
                 + "codigo = ?";

@@ -1,6 +1,9 @@
 package com.mycompany.vista;
 
 
+import com.mycompany.controlador.Controlador;
+import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
+import com.mycompany.modelo.dao.interfaces.ClienteDAO;
 import com.mycompany.vista.Clientes;
 
 /*
@@ -242,11 +245,12 @@ public class Proveedor extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-
+        ClienteDAO clienteDAO = new ClienteDAOImpl();
+        Controlador controlador = new Controlador(clienteDAO);
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Clientes().setVisible(true);
+                new Clientes(controlador).setVisible(true);
             }
         });
     }
