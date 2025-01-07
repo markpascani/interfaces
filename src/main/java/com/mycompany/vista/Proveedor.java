@@ -1,7 +1,7 @@
-package interfaz;
+package com.mycompany.vista;
 
 
-import interfaz.Clientes;
+import com.mycompany.vista.Clientes;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
