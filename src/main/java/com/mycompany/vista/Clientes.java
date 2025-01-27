@@ -5,6 +5,7 @@ import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
 import com.mycompany.modelo.dao.interfaces.ClienteDAO;
 import com.mycompany.modelo.entidades.Cliente;
 import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -14,19 +15,40 @@ import java.awt.event.KeyEvent;
  *
  * @author alumno
  */
-public class Clientes extends javax.swing.JFrame {
+public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
 
     private final Controlador controlador;
-    private boolean esAlta = false;
-    private boolean esBaja = false;
-    private boolean esModificacion = false;
+    private MODO modo = MODO.INACTIVO;
 
-    /**
-     * Creates new form Proyecto
-     */
+    public enum MODO {
+        ALTA,
+        BAJA,
+        MODIFICACION,
+        INACTIVO
+    }
+
     public Clientes(Controlador controlador) {
         this.controlador = controlador;
         initComponents();
+
+        // Listener de Aceptar
+        botonAceptar.addActionListener(e -> {
+            switch (modo) {
+                case ALTA:
+                    controlador.altaCliente();
+                    break;
+                case BAJA:
+                    controlador.bajaCliente();
+                    break;
+                case MODIFICACION:
+                    controlador.modificarCliente();
+                    break;
+                default:
+                    mostrarMensaje("No se ha seleccionado una operación.");
+            }
+            modo = MODO.INACTIVO;
+            limpiarCampos();
+        });
     }
 
     /**
@@ -302,47 +324,48 @@ public class Clientes extends javax.swing.JFrame {
 
         //Se limpian los campos y se deja habilitado solo el campo codigo
         limpiarCampos();
-        deshabilitarCampos();
-        esAlta = true;
+        estadoCampos(false);
+        modo = MODO.ALTA;
     }//GEN-LAST:event_botonAltaMousePressed
 
     private void botonBajaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonBajaMousePressed
         // TODO add your handling code here:
         //Se limpian los campos y se deja habilitado solo el campo codigo
         limpiarCampos();
-        deshabilitarCampos();
-        esBaja = true;
+        estadoCampos(false);
+        modo = MODO.BAJA;
     }//GEN-LAST:event_botonBajaMousePressed
 
     private void campoCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoCodigoKeyPressed
         // TODO add your handling code here:
-        int codigoCliente;
-        boolean existencia;
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !campoCodigo.getText().isEmpty()) {
-            codigoCliente = Integer.parseInt(campoCodigo.getText());
-            boolean existeCodigo = controlador.comprobarExistenciaCliente(codigoCliente);
-            
-            if(existeCodigo){
-          
-                if(esBaja) {
-                    bajaCliente(codigoCliente);
-                    esBaja = false;
+            switch (modo) {
+                case BAJA:
+                    // Mandas a hacer la baja directamente
+                    controlador.bajaCliente();
+                    modo = MODO.INACTIVO;
                     limpiarCampos();
-                }else if(esModificacion){
-                    habilitarAlta();
-                    cargarCliente(codigoCliente); 
-                }
-            }
-            
+                    break;
 
+                case MODIFICACION:
+                    // Buscas el cliente para que rellene la vista
+                    controlador.buscarCliente();
+                    // Si lo encuentra, llamará a mostrarCliente(...)
+                    estadoCampos(true);
+                    break;
+
+                // ALTA o INACTIVO no hace nada en Enter.
+                default:
+                    break;
+            }
         }
     }//GEN-LAST:event_campoCodigoKeyPressed
 
     private void menuMantenimientoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuMantenimientoMousePressed
         // TODO add your handling code here:
         limpiarCampos();
-        deshabilitarCampos();
-        esModificacion = true;
+        estadoCampos(false);
+        modo = MODO.MODIFICACION;
     }//GEN-LAST:event_menuMantenimientoMousePressed
 
     /**
@@ -351,6 +374,15 @@ public class Clientes extends javax.swing.JFrame {
     public static void main(String args[]) {
         ClienteDAO clienteDAO = new ClienteDAOImpl();
         Controlador controlador = new Controlador(clienteDAO);
+
+        // Aquí creas la vista
+        Clientes vista = new Clientes(controlador);
+
+        // Y aquí inyectas la vista en el controlador
+        controlador.setVista(vista);
+
+        // Por último, muestras la vista
+        vista.setVisible(true);
 
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -428,7 +460,8 @@ public class Clientes extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuPorCodigo;
     // End of variables declaration//GEN-END:variables
 
-    private void limpiarCampos() {
+    @Override
+    public void limpiarCampos() {
         campoApellidos.setText("");
         campoNombre.setText("");
         letraNif.setText("");
@@ -442,68 +475,106 @@ public class Clientes extends javax.swing.JFrame {
         campoTotalVentas.setText("");
     }
 
-    private void deshabilitarCampos() {
-        campoApellidos.setEnabled(false);
-        campoNombre.setEnabled(false);
-        letraNif.setEnabled(false);
-        campoDomicilio.setEnabled(false);
-        campoLocalidad.setEnabled(false);
-        campoCP.setEnabled(false);
-        campoTelefono.setEnabled(false);
-        campoMovil.setEnabled(false);
-        campoFax1.setEnabled(false);
-        campoTotalVentas.setEnabled(false);
-        botonAceptar.setEnabled(false);
-        botonCancelar.setEnabled(false);
-        botonSalir.setEnabled(false);
-        campoEmail.setEnabled(false);
-        campoNIF.setEnabled(false);
+    @Override
+    public void estadoCampos(boolean estado) {
+        campoApellidos.setEnabled(estado);
+        campoNombre.setEnabled(estado);
+        letraNif.setEnabled(estado);
+        campoDomicilio.setEnabled(estado);
+        campoLocalidad.setEnabled(estado);
+        campoCP.setEnabled(estado);
+        campoTelefono.setEnabled(estado);
+        campoMovil.setEnabled(estado);
+        campoFax1.setEnabled(estado);
+        campoTotalVentas.setEnabled(estado);
+        botonAceptar.setEnabled(estado);
+        botonCancelar.setEnabled(estado);
+        botonSalir.setEnabled(estado);
+        campoEmail.setEnabled(estado);
+        campoNIF.setEnabled(estado);
 
-        campoCodigo.setEnabled(true);
-        campoCodigo.grabFocus();
+        if (modo == MODO.INACTIVO) {
+            campoCodigo.setEnabled(estado);
+        } else {
+            campoCodigo.setEnabled(!estado);
+        }
+
+        if (estado = false) {
+            campoCodigo.grabFocus();
+        } else {
+            campoApellidos.grabFocus();
+        }
+
     }
 
-    private void habilitarAlta() {
-        campoApellidos.setEnabled(true);
-        campoNombre.setEnabled(true);
-        letraNif.setEnabled(true);
-        campoDomicilio.setEnabled(true);
-        campoLocalidad.setEnabled(true);
-        campoCP.setEnabled(true);
-        campoTelefono.setEnabled(true);
-        campoMovil.setEnabled(true);
-        campoFax1.setEnabled(true);
-        campoTotalVentas.setEnabled(false);
-        botonAceptar.setEnabled(true);
-        botonCancelar.setEnabled(true);
-        botonSalir.setEnabled(true);
-
-        campoCodigo.setEnabled(false);
-        campoApellidos.grabFocus();
+    @Override
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
     }
 
-    private void bajaCliente(int codigoCliente) {
-        if(controlador.eliminarCliente(codigoCliente)){
-            javax.swing.JOptionPane.showMessageDialog(this, "Eliminado con exito.");
-        }else{
-            javax.swing.JOptionPane.showMessageDialog(this, "Ocurrio un error, no se ha eliminado.");
-        };
+    @Override
+    public Cliente obtenerClienteDeFormulario() {
+        // Construyes un Cliente con los datos actuales de la vista
+        Cliente c = new Cliente();
+        // Ojo con el parseo de campos numéricos
+        try {
+            c.setCodigo(Integer.parseInt(campoCodigo.getText()));
+        } catch (NumberFormatException e) {
+            // Manejo de error si no es número
+            c.setCodigo(-1);
+        }
+        // Si NIF y letra se guardan juntos o separados depende de tu diseño
+        c.setNif(campoNIF.getText() + letraNif.getText());
+        c.setNombre(campoNombre.getText());
+        c.setApellidos(campoApellidos.getText());
+        c.setDomicilio(campoDomicilio.getText());
+        c.setLocalidad(campoLocalidad.getText());
+        c.setCodigoPostal(campoCP.getText());
+        c.setTelefono(campoTelefono.getText());
+        c.setMovil(campoMovil.getText());
+        c.setFax(campoFax1.getText());
+        c.setEmail(campoEmail.getText());
+
+        try {
+            c.setTotalVentas(Float.parseFloat(campoTotalVentas.getText()));
+        } catch (NumberFormatException e) {
+            c.setTotalVentas(0);
+        }
+        return c;
     }
 
-    private void cargarCliente(int codigoCliente) {
-        Cliente cliente = controlador.obtenerCliente(codigoCliente);
-        campoApellidos.setText(cliente.getApellidos());
-        campoNombre.setText(cliente.getNombre());
-        letraNif.setText(cliente.getNif());
-        campoDomicilio.setText(cliente.getDomicilio());
-        campoLocalidad.setText(cliente.getLocalidad());
-        campoCP.setText(cliente.getCodigoPostal());
-        campoTelefono.setText(cliente.getTelefono());
-        campoMovil.setText(cliente.getMovil());
-        campoFax1.setText(cliente.getFax());
-        campoEmail.setText(cliente.getEmail());
-        campoTotalVentas.setText(String.valueOf(cliente.getTotalVentas()));
-        
+    @Override
+    public void mostrarCliente(Cliente entidad) {
+        if (entidad == null) {
+            return;
+        }
+        // Rellenas los campos con los datos del cliente
+        campoCodigo.setText(String.valueOf(entidad.getCodigo()));
+        // Si tu DB guarda el NIF con la letra pegada, aquí separas si hace falta:
+        // Por ejemplo, si la base guarda "12345678Z", puedes separar la letra
+        // De momento, lo simple sería:
+        campoNIF.setText(entidad.getNif());
+        letraNif.setText(""); // si quisieras mostrar la letra en un campo distinto
+        campoNombre.setText(entidad.getNombre());
+        campoApellidos.setText(entidad.getApellidos());
+        campoDomicilio.setText(entidad.getDomicilio());
+        campoLocalidad.setText(entidad.getLocalidad());
+        campoCP.setText(entidad.getCodigoPostal());
+        campoTelefono.setText(entidad.getTelefono());
+        campoMovil.setText(entidad.getMovil());
+        campoFax1.setText(entidad.getFax());
+        campoEmail.setText(entidad.getEmail());
+        campoTotalVentas.setText(String.valueOf(entidad.getTotalVentas()));
+    }
+
+    @Override
+    public int obtenerCodigoCliente() {
+        // Lee el campo y devuelve un entero
+        try {
+            return Integer.parseInt(campoCodigo.getText());
+        } catch (NumberFormatException e) {
+            return -1; // valor para indicar error
+        }
     }
 
 }
