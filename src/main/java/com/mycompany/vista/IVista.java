@@ -13,7 +13,6 @@ import com.mycompany.modelo.entidades.Cliente;
  */
 public interface IVista<T> {
 
-
     // Mostrar mensajes al usuario
     void mostrarMensaje(String mensaje);
 
@@ -31,4 +30,34 @@ public interface IVista<T> {
 
     // Retornar el código (int) escrito en el campo correspondiente
     int obtenerCodigoCliente();
+
+    // Estado inicial
+    void estadoInicial();
+
+    //Cancelar accion
+    void cancelarAccion();
+
+    //Comprobar campos vacios antes de hacer una consulta
+    boolean comprobarCampos();
+
+    // Limitar entrada a solo letras, con longitud min y max, en un campo específico
+    void limitarEntradaLetrasConLongitudMinYMax(javax.swing.JTextField campo, int min, int max);
+
+    // Limitar entrada a solo cifras, con longitud exacta, en un campo específico
+    void limitarEntradaACifraConLongitudExacta(javax.swing.JTextField campo, int longitud);
+
+    // Comprobar email en un campo concreto
+    void comprobarEmail(javax.swing.JTextField campo);
+
+    // Limitar entrada a longitud min y max
+    void limitarEntradaALongitudMinYMax(javax.swing.JTextField campo, int min, int max);
+    
+    
+    // Obtener cifra NIF cliente
+    int obtenerCifrasNIFCliente();
+    
+    // Establecer un campo con un texto
+    void establecerLetraNIF(String letra);
+    
+
 }

@@ -2,7 +2,7 @@ package com.mycompany.vista;
 
 import com.mycompany.controlador.Controlador;
 import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
-import com.mycompany.modelo.dao.interfaces.ClienteDAO;
+import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -96,9 +96,10 @@ public class Inicio extends javax.swing.JFrame {
 
     private void menuClientesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuClientesMousePressed
         // TODO add your handling code here:
-        ClienteDAO clienteDAO = new ClienteDAOImpl();
+        IGenericDAO clienteDAO = new ClienteDAOImpl();
         Controlador controlador = new Controlador(clienteDAO);
         Clientes clientes = new Clientes(controlador);
+        controlador.setVista(clientes);
         clientes.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_menuClientesMousePressed

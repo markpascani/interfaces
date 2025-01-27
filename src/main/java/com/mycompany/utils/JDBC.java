@@ -16,9 +16,9 @@ import java.sql.SQLException;
 public class JDBC {
 
     //Variable para la conexion a la bbdd
-    private static final String DB_URL = "jdbc:mysql://37.187.37.143:3306/Interfaces?useSSL=false";
-    private static final String DB_USER = "markpascani";
-    private static final String DB_PASS = "markpascani";
+    private static final String DB_URL = "jdbc:mysql://37.187.37.143:3306/Interfaces?useSSL=false&allowPublicKeyRetrieval=true";
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = "34Maik@73Do$";
 
     /**
      * Metodo para obtener una conexino a la base de datos

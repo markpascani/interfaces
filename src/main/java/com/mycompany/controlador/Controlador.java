@@ -4,9 +4,9 @@
  */
 package com.mycompany.controlador;
 
-import com.mycompany.modelo.dao.interfaces.ClienteDAO;
 import com.mycompany.modelo.entidades.Cliente;
 import com.mycompany.vista.IVista;
+import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 
 /**
  *
@@ -14,90 +14,47 @@ import com.mycompany.vista.IVista;
  */
 public class Controlador {
 
-    private final ClienteDAO clienteDAO;
+    private final IGenericDAO clienteDAO;
     private IVista<Cliente> vista; // la vista que implementará IVista<Cliente>
 
-    public Controlador(ClienteDAO clienteDAO) {
+    public Controlador(IGenericDAO clienteDAO) {
         this.clienteDAO = clienteDAO;
     }
-
-    // Para inyectar la vista en el controlador
-    public void setVista(IVista<Cliente> vista) {
+    
+    public void setVista(IVista<Cliente> vista){
         this.vista = vista;
     }
 
-    public void iniciarVista() {
-        vista.limpiarCampos();
-        vista.estadoCampos(false);
-    }
 
     public void altaCliente() {
+        calcularLetraNIF();
         Cliente nuevo = vista.obtenerClienteDeFormulario();
-        boolean respuesta = clienteDAO.insertarCliente(nuevo);
-
-        // Comprobación de código en la DB
-        if (nuevo.getCodigo() <= 0) {
-            vista.mostrarMensaje("Código inválido para alta.");
-            return;
-        }
-
-        if (!clienteDAO.comprobarCodigo(nuevo.getCodigo())) {
-            vista.mostrarMensaje("No existe cliente con ese codigo.");
-            return;
-        }
-
+        boolean respuesta = clienteDAO.darDeAlta(nuevo);
         if (respuesta) {
             vista.mostrarMensaje("Cliente insertado correctamente.");
         } else {
             vista.mostrarMensaje("Error al insertar el cliente.");
         }
-
-        vista.limpiarCampos();
+        vista.cancelarAccion();
     }
 
     public void bajaCliente() {
-
-        // 1) Obtenemos el código desde la vista
         int codigo = vista.obtenerCodigoCliente();
-        if (codigo < 0) {
-            vista.mostrarMensaje("El código de cliente no es válido.");
-            return;
-        }
-
-        if (!clienteDAO.comprobarCodigo(codigo)) {
-            vista.mostrarMensaje("No existe cliente con ese codigo.");
-            return;
-        }
-
-        // 2) Eliminamos
-        boolean eliminado = clienteDAO.borrarCliente(codigo);
-        // 3) Mostramos mensaje
+        // Eliminamos
+        boolean eliminado = clienteDAO.darDeBaja(codigo);
+        // Mostramos mensaje
         if (eliminado) {
             vista.mostrarMensaje("Cliente eliminado con éxito.");
         } else {
             vista.mostrarMensaje("Error al eliminar el cliente.");
         }
-        vista.limpiarCampos();
-
+        vista.cancelarAccion();
     }
 
     public void modificarCliente() {
-        // 1) Obtener un Cliente con los datos de la vista
+        calcularLetraNIF();
         Cliente modificado = vista.obtenerClienteDeFormulario();
-
-        // Comprobación de código en la DB
-        if (modificado.getCodigo() <= 0) {
-            vista.mostrarMensaje("Código inválido para alta.");
-            return;
-        }
-
-        if (!clienteDAO.comprobarCodigo(modificado.getCodigo())) {
-            vista.mostrarMensaje("No existe cliente con ese codigo.");
-            return;
-        }
-        // 2) Editar en DAO
-        boolean ok = clienteDAO.editarCliente(modificado);
-        // 3) Mensaje
+        boolean ok = clienteDAO.modificar(modificado);
         if (ok) {
             vista.mostrarMensaje("Cliente actualizado con éxito.");
         } else {
@@ -113,12 +70,44 @@ public class Controlador {
             return;
         }
         // 2) Buscar en la base
-        Cliente c = clienteDAO.obtenerCliente(codigo);
+        Cliente c = (Cliente) clienteDAO.obtenerPorID(codigo);
         // 3) Si existe, mostrarlo; si no, mensaje de error
         if (c != null) {
             vista.mostrarCliente(c);
         } else {
             vista.mostrarMensaje("No se encontró un cliente con ese código.");
         }
+    }
+
+    public boolean comprobarExistenciaDelCliente() {
+        int codigo = vista.obtenerCodigoCliente();
+        
+        if (codigo <= 0) {
+            vista.mostrarMensaje("Código inválido.");
+            return true;
+        }
+        
+        // Buscamos si existe el id
+        boolean existe = clienteDAO.comprobarSiExistePorCodigo(codigo);
+        if(existe){
+            vista.mostrarMensaje("El id existe en la base de datos.");
+            Cliente cliente =  (Cliente) clienteDAO.obtenerPorID(codigo);
+            vista.mostrarCliente(cliente);
+            return true;
+        }else{
+            vista.mostrarMensaje("El id no existe en la base de datos.");
+            return false;
+        }
+    }
+    
+    public void activarFormulario(boolean activar){
+        vista.estadoCampos(activar);
+    }
+    
+    public void calcularLetraNIF(){
+        int nif = vista.obtenerCifrasNIFCliente();
+        String cadenaLetras = "TRWAGMYFPDXBNJZSQVHLCKE";
+        int resto = nif%23;  
+        vista.establecerLetraNIF(String.valueOf(cadenaLetras.charAt(resto)));
     }
 }

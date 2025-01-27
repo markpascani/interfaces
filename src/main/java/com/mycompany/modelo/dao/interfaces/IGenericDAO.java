@@ -11,20 +11,20 @@ import com.mycompany.modelo.entidades.Cliente;
  * Define los metodos para interactuar con la tabla de empleados en la base de datos
  * @author mihai
  */
-public interface ClienteDAO {
-    //Alta de nuevo cliente
-    boolean insertarCliente(Cliente cliente);
+public interface IGenericDAO<T, ID> {
+    //Alta
+    boolean darDeAlta(T entidad);
     
-    //Baja de cliente
-    boolean borrarCliente(int codigoCliente);
+    //Baja
+    boolean darDeBaja(ID codigo);
     
-    //Editar un cliente
-    boolean editarCliente(Cliente cliente);
+    //Editar
+    boolean modificar(T entidad);
     
-    //Obtener cliente por codigo
-    Cliente obtenerCliente(int codigoCliente);
+    //Obtener por codigo
+    T obtenerPorID(ID codigo);
     
     //Comprobar si un id ya existe
-    boolean comprobarCodigo(int codigoCliente);
+    boolean comprobarSiExistePorCodigo(ID codigo);
     
 }

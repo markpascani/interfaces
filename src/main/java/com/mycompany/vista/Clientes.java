@@ -2,10 +2,13 @@ package com.mycompany.vista;
 
 import com.mycompany.controlador.Controlador;
 import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
-import com.mycompany.modelo.dao.interfaces.ClienteDAO;
 import com.mycompany.modelo.entidades.Cliente;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
+import com.mycompany.modelo.dao.interfaces.IGenericDAO;
+import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import javax.swing.JTextField;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -30,25 +33,57 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
     public Clientes(Controlador controlador) {
         this.controlador = controlador;
         initComponents();
+        estadoInicial();
+
+        //Restricciones
+        limitarEntradaACifraConLongitudExacta(campoCP, 5);
+        limitarEntradaACifraConLongitudExacta(campoNIF, 8);
+        limitarEntradaACifraConLongitudExacta(campoTelefono, 9);
+        limitarEntradaACifraConLongitudExacta(campoFax, 9);
+        limitarEntradaACifraConLongitudExacta(campoMovil, 9);
+        limitarEntradaLetrasConLongitudMinYMax(campoNombre, 2, 15);
+        limitarEntradaLetrasConLongitudMinYMax(campoApellidos, 2, 35);
+        limitarEntradaLetrasConLongitudMinYMax(campoLocalidad, 2, 20);
+        limitarEntradaALongitudMinYMax(campoDomicilio, 5, 40);
+        comprobarEmail(campoEmail);
 
         // Listener de Aceptar
         botonAceptar.addActionListener(e -> {
             switch (modo) {
                 case ALTA:
-                    controlador.altaCliente();
+                    if (comprobarCampos()) {
+
+                        controlador.altaCliente();
+                    }
+
                     break;
                 case BAJA:
-                    controlador.bajaCliente();
+                    if (comprobarCampos()) {
+
+                        controlador.bajaCliente();
+                    }
                     break;
                 case MODIFICACION:
-                    controlador.modificarCliente();
+                    if (comprobarCampos()) {
+
+                        controlador.modificarCliente();
+                    }
                     break;
                 default:
                     mostrarMensaje("No se ha seleccionado una operación.");
             }
             modo = MODO.INACTIVO;
-            limpiarCampos();
+            cancelarAccion();
         });
+
+        botonSalir.addActionListener(e -> {
+            estadoInicial();
+        });
+
+        botonCancelar.addActionListener(e -> {
+            cancelarAccion();
+        });
+
     }
 
     /**
@@ -83,7 +118,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         jLabel10 = new javax.swing.JLabel();
         campoEmail = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        campoFax1 = new javax.swing.JTextField();
+        campoFax = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         botonAceptar = new javax.swing.JButton();
         botonSalir = new javax.swing.JButton();
@@ -241,7 +276,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel10)
-                                    .addComponent(campoFax1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(campoFax, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(campoEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -299,7 +334,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(campoTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(campoMovil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(campoFax1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(campoFax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
@@ -323,38 +358,39 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         // TODO add your handling code here:
 
         //Se limpian los campos y se deja habilitado solo el campo codigo
-        limpiarCampos();
-        estadoCampos(false);
         modo = MODO.ALTA;
+        cancelarAccion();
     }//GEN-LAST:event_botonAltaMousePressed
 
     private void botonBajaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonBajaMousePressed
         // TODO add your handling code here:
         //Se limpian los campos y se deja habilitado solo el campo codigo
-        limpiarCampos();
-        estadoCampos(false);
         modo = MODO.BAJA;
+        cancelarAccion();
     }//GEN-LAST:event_botonBajaMousePressed
 
     private void campoCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoCodigoKeyPressed
         // TODO add your handling code here:
+        boolean existeCodigo;
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !campoCodigo.getText().isEmpty()) {
             switch (modo) {
                 case BAJA:
-                    // Mandas a hacer la baja directamente
-                    controlador.bajaCliente();
-                    modo = MODO.INACTIVO;
-                    limpiarCampos();
+                    if (controlador.comprobarExistenciaDelCliente()) {
+                        controlador.activarFormulario(true);
+                    }
                     break;
-
                 case MODIFICACION:
-                    // Buscas el cliente para que rellene la vista
-                    controlador.buscarCliente();
-                    // Si lo encuentra, llamará a mostrarCliente(...)
-                    estadoCampos(true);
+                    if (controlador.comprobarExistenciaDelCliente()) {
+                        controlador.activarFormulario(true);
+                    }
                     break;
 
-                // ALTA o INACTIVO no hace nada en Enter.
+                case ALTA:
+                    if (!controlador.comprobarExistenciaDelCliente()) {
+                        controlador.activarFormulario(true);
+                    }
+                    break;
+                // INACTIVO no hace nada en Enter.
                 default:
                     break;
             }
@@ -363,26 +399,14 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
 
     private void menuMantenimientoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuMantenimientoMousePressed
         // TODO add your handling code here:
-        limpiarCampos();
-        estadoCampos(false);
         modo = MODO.MODIFICACION;
+        cancelarAccion();
     }//GEN-LAST:event_menuMantenimientoMousePressed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        ClienteDAO clienteDAO = new ClienteDAOImpl();
-        Controlador controlador = new Controlador(clienteDAO);
-
-        // Aquí creas la vista
-        Clientes vista = new Clientes(controlador);
-
-        // Y aquí inyectas la vista en el controlador
-        controlador.setVista(vista);
-
-        // Por último, muestras la vista
-        vista.setVisible(true);
 
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -411,7 +435,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Clientes(controlador).setVisible(true);
+
             }
         });
     }
@@ -429,7 +453,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
     private javax.swing.JTextField campoCodigo;
     private javax.swing.JTextField campoDomicilio;
     private javax.swing.JTextField campoEmail;
-    private javax.swing.JTextField campoFax1;
+    private javax.swing.JTextField campoFax;
     private javax.swing.JTextField campoLocalidad;
     private javax.swing.JTextField campoMovil;
     private javax.swing.JTextField campoNIF;
@@ -465,14 +489,16 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         campoApellidos.setText("");
         campoNombre.setText("");
         letraNif.setText("");
+        campoNIF.setText("");
         campoCodigo.setText("");
         campoDomicilio.setText("");
         campoLocalidad.setText("");
         campoCP.setText("");
         campoTelefono.setText("");
         campoMovil.setText("");
-        campoFax1.setText("");
+        campoFax.setText("");
         campoTotalVentas.setText("");
+        campoEmail.setText("");
     }
 
     @Override
@@ -485,8 +511,8 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         campoCP.setEnabled(estado);
         campoTelefono.setEnabled(estado);
         campoMovil.setEnabled(estado);
-        campoFax1.setEnabled(estado);
-        campoTotalVentas.setEnabled(estado);
+        campoFax.setEnabled(estado);
+
         botonAceptar.setEnabled(estado);
         botonCancelar.setEnabled(estado);
         botonSalir.setEnabled(estado);
@@ -523,7 +549,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
             // Manejo de error si no es número
             c.setCodigo(-1);
         }
-        // Si NIF y letra se guardan juntos o separados depende de tu diseño
+
         c.setNif(campoNIF.getText() + letraNif.getText());
         c.setNombre(campoNombre.getText());
         c.setApellidos(campoApellidos.getText());
@@ -532,7 +558,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         c.setCodigoPostal(campoCP.getText());
         c.setTelefono(campoTelefono.getText());
         c.setMovil(campoMovil.getText());
-        c.setFax(campoFax1.getText());
+        c.setFax(campoFax.getText());
         c.setEmail(campoEmail.getText());
 
         try {
@@ -548,13 +574,12 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         if (entidad == null) {
             return;
         }
-        // Rellenas los campos con los datos del cliente
+        // Rellena los campos con los datos del cliente
         campoCodigo.setText(String.valueOf(entidad.getCodigo()));
-        // Si tu DB guarda el NIF con la letra pegada, aquí separas si hace falta:
-        // Por ejemplo, si la base guarda "12345678Z", puedes separar la letra
-        // De momento, lo simple sería:
-        campoNIF.setText(entidad.getNif());
-        letraNif.setText(""); // si quisieras mostrar la letra en un campo distinto
+
+        String nifCompleto = entidad.getNif();
+        campoNIF.setText(nifCompleto.substring(0, 8));   // las 8 cifras
+        letraNif.setText(nifCompleto.substring(8));      // la letra
         campoNombre.setText(entidad.getNombre());
         campoApellidos.setText(entidad.getApellidos());
         campoDomicilio.setText(entidad.getDomicilio());
@@ -562,7 +587,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         campoCP.setText(entidad.getCodigoPostal());
         campoTelefono.setText(entidad.getTelefono());
         campoMovil.setText(entidad.getMovil());
-        campoFax1.setText(entidad.getFax());
+        campoFax.setText(entidad.getFax());
         campoEmail.setText(entidad.getEmail());
         campoTotalVentas.setText(String.valueOf(entidad.getTotalVentas()));
     }
@@ -577,4 +602,169 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         }
     }
 
+    @Override
+    public void estadoInicial() {
+        modo = MODO.INACTIVO;
+        cancelarAccion();
+        campoTotalVentas.setEnabled(false);
+    }
+
+    @Override
+    public void cancelarAccion() {
+        limpiarCampos();
+        estadoCampos(false);
+    }
+
+    @Override
+    public boolean comprobarCampos() {
+        // 1) NIF: exactamente 8 caracteres
+        if (campoNIF.getText().length() != 8) {
+            mostrarMensaje("El NIF debe tener exactamente 8 dígitos.");
+            return false;
+        }
+
+        // 2) Código Postal: 5 exactas
+        if (campoCP.getText().length() != 5) {
+            mostrarMensaje("El código postal debe tener 5 cifras.");
+            return false;
+        }
+
+        // 3) Teléfono, Móvil y Fax: 0 (vacío) o 9 dígitos
+        //    si quieres permitir que estén en blanco, asume length = 0 es válido
+        int telLength = campoTelefono.getText().length();
+        if (telLength != 0 && telLength != 9) {
+            mostrarMensaje("El teléfono debe tener 9 dígitos o estar vacío.");
+            return false;
+        }
+
+        int movilLength = campoMovil.getText().length();
+        if (movilLength != 0 && movilLength != 9) {
+            mostrarMensaje("El móvil debe tener 9 dígitos o estar vacío.");
+            return false;
+        }
+
+        int faxLength = campoFax.getText().length();
+        if (faxLength != 0 && faxLength != 9) {
+            mostrarMensaje("El fax debe tener 9 dígitos o estar vacío.");
+            return false;
+        }
+
+        // 4) Email: no más de 40
+        if (campoEmail.getText().length() > 40) {
+            mostrarMensaje("El correo electrónico no puede tener más de 40 caracteres.");
+            return false;
+        }
+
+        // 5) Localidad: no más de 20
+        if (campoLocalidad.getText().length() > 20) {
+            mostrarMensaje("La localidad no puede tener más de 20 caracteres.");
+            return false;
+        }
+
+        // 6) Domicilio: no más de 40
+        if (campoDomicilio.getText().length() > 40) {
+            mostrarMensaje("El domicilio no puede tener más de 40 caracteres.");
+            return false;
+        }
+
+        // 7) Nombre: no más de 15
+        if (campoNombre.getText().length() > 15) {
+            mostrarMensaje("El nombre no puede tener más de 15 caracteres.");
+            return false;
+        }
+
+        // 8) Apellidos: no más de 35
+        if (campoApellidos.getText().length() > 35) {
+            mostrarMensaje("Los apellidos no pueden tener más de 35 caracteres.");
+            return false;
+        }
+
+        // Si llegamos hasta aquí, todo cumple
+        return true;
+    }
+
+    @Override
+    public void limitarEntradaLetrasConLongitudMinYMax(JTextField campo, int min, int max) {
+        campo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                // Si no es letra, lo bloqueamos
+                if (!Character.isLetter(c)) {
+                    e.consume();
+                    return;
+                }
+                // Si ya alcanzamos la longitud máxima, bloqueamos
+                if (campo.getText().length() >= max) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void limitarEntradaACifraConLongitudExacta(JTextField campo, int longitud) {
+        campo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // Bloqueamos si no es dígito
+                if (!Character.isDigit(e.getKeyChar())) {
+                    e.consume();
+                    return;
+                }
+                // Bloqueamos si alcanzamos la longitud exacta
+                if (campo.getText().length() >= longitud) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void comprobarEmail(JTextField campo) {
+        campo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String texto = campo.getText().trim();
+                // Patrón mínimo de email (muy básico)
+                String patron = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+                if (!texto.matches(patron)) {
+                    // Muestra alerta, colorea el campo, etc.
+                    // o se lo dejas al final, depende de tu necesidad
+                    campo.setBackground(Color.PINK);
+                } else {
+                    campo.setBackground(Color.WHITE);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void limitarEntradaALongitudMinYMax(JTextField campo, int min, int max) {
+        campo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // Si llegamos a la longitud máxima, bloqueamos
+                if (campo.getText().length() >= max) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
+    @Override
+    public int obtenerCifrasNIFCliente() {
+        int cifras = 0;
+        try {
+            cifras = Integer.parseInt(campoNIF.getText());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return cifras;
+    }
+
+    @Override
+    public void establecerLetraNIF(String letra) {
+        letraNif.setText(letra);
+    }
 }

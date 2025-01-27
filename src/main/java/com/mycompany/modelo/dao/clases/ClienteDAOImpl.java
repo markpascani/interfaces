@@ -4,7 +4,6 @@
  */
 package com.mycompany.modelo.dao.clases;
 
-import com.mycompany.modelo.dao.interfaces.ClienteDAO;
 import com.mycompany.modelo.entidades.Cliente;
 import com.mycompany.utils.JDBC;
 import java.io.PipedInputStream;
@@ -12,15 +11,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 
 /**
  *  Implementa la logica de acceso a la base de datos para la tabla cliente
  * @author mihai
  */
-public class ClienteDAOImpl implements ClienteDAO{
+public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
 
     @Override
-    public boolean insertarCliente(Cliente cliente) {
+    public boolean darDeAlta(Cliente cliente) {
         String sql = "INSERT INTO Clientes "
                 + "(codigo, nif, apellidos, nombre, domicilio, codigo_postal, localidad, telefono, movil, fax, email, total_venta) "
                 + "values (?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -31,10 +31,10 @@ public class ClienteDAOImpl implements ClienteDAO{
             statement.setString(2, cliente.getNif());
             statement.setString(3, cliente.getApellidos());
             statement.setString(4, cliente.getNombre());
-            statement.setString(6, cliente.getDomicilio());
-            statement.setString(7, cliente.getCodigoPostal());
-            statement.setString(8, cliente.getLocalidad());
-            statement.setString(9, cliente.getTelefono());
+            statement.setString(5, cliente.getDomicilio());
+            statement.setString(6, cliente.getCodigoPostal());
+            statement.setString(7, cliente.getLocalidad());
+            statement.setString(8, cliente.getTelefono());
             statement.setString(9, cliente.getMovil());
             statement.setString(10, cliente.getFax());
             statement.setString(11, cliente.getEmail());
@@ -49,7 +49,7 @@ public class ClienteDAOImpl implements ClienteDAO{
     }
 
     @Override
-    public boolean borrarCliente(int codigoCliente) {
+    public boolean darDeBaja(Integer codigoCliente) {
         String sql = "DELETE FROM Clientes WHERE id = ?";
         try(Connection connection = JDBC.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)){
@@ -62,10 +62,10 @@ public class ClienteDAOImpl implements ClienteDAO{
     }
 
     @Override
-    public boolean editarCliente(Cliente cliente) {
+    public boolean modificar(Cliente cliente) {
         String sql = "UPDATE Clientes SET "
                 + "nombre = ?, "
-                + "apellido = ?, "
+                + "apellidos = ?, "
                 + "domicilio = ?, "
                 + "codigo_postal = ?, "
                 + "localidad = ?, "
@@ -94,7 +94,7 @@ public class ClienteDAOImpl implements ClienteDAO{
     
 
     @Override
-    public Cliente obtenerCliente(int codigoCliente) {
+    public Cliente obtenerPorID(Integer codigoCliente) {
         Cliente cliente = new Cliente();
         String sql = "SELECT codigo, nif, apellidos, nombre, domicilio, codigo_postal, localidad, telefono, movil, fax, email, total_venta"
                 + " FROM Clientes WHERE "
@@ -116,16 +116,18 @@ public class ClienteDAOImpl implements ClienteDAO{
                 cliente.setMovil(rs.getString("movil"));
                 cliente.setFax(rs.getString("fax"));
                 cliente.setEmail(rs.getString("email"));
-                cliente.setTotalVentas(rs.getFloat("total_ventas"));
+                cliente.setTotalVentas(rs.getFloat("total_venta"));
+                
+                return cliente;
             }
         }catch(SQLException e){
             System.err.println("Error en la base de datos.-> "+e.getMessage());
         }
-        return cliente;
+        return null;
     }
 
     @Override
-    public boolean comprobarCodigo(int codigoCliente) {
+    public boolean comprobarSiExistePorCodigo(Integer codigoCliente) {
         String sql = "SELECT COUNT(codigo) FROM Clientes WHERE codigo = ?";
         try(Connection connection = JDBC.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)){
