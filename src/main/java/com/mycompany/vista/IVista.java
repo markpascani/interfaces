@@ -4,7 +4,7 @@
  */
 package com.mycompany.vista;
 
-import com.mycompany.controlador.Controlador;
+import com.mycompany.controlador.ControladorBase;
 import com.mycompany.modelo.entidades.Cliente;
 
 /**
@@ -22,14 +22,14 @@ public interface IVista<T> {
     // Habilitar o deshabilitar campos (o podría usarse un enum con modos)
     void estadoCampos(boolean estado);
 
-    // Tomar datos del formulario y convertirlos a un objeto Cliente
-    T obtenerClienteDeFormulario();
+    // Tomar datos del formulario y convertirlos a un objeto
+    T obtenerEntidadDelFormulario();
 
-    // Mostrar los datos de un objeto Cliente en el formulario
-    void mostrarCliente(T entidad);
+    // Mostrar los datos de un objeto en el formulario
+    void mostrarEntidad(T entidad);
 
     // Retornar el código (int) escrito en el campo correspondiente
-    int obtenerCodigoCliente();
+    int obtenerCodigoEntidad();
 
     // Estado inicial
     void estadoInicial();
@@ -37,8 +37,6 @@ public interface IVista<T> {
     //Cancelar accion
     void cancelarAccion();
 
-    //Comprobar campos vacios antes de hacer una consulta
-    boolean comprobarCampos();
 
     // Limitar entrada a solo letras, con longitud min y max, en un campo específico
     void limitarEntradaLetrasConLongitudMinYMax(javax.swing.JTextField campo, int min, int max);
@@ -51,13 +49,8 @@ public interface IVista<T> {
 
     // Limitar entrada a longitud min y max
     void limitarEntradaALongitudMinYMax(javax.swing.JTextField campo, int min, int max);
-    
-    
-    // Obtener cifra NIF cliente
-    int obtenerCifrasNIFCliente();
-    
-    // Establecer un campo con un texto
-    void establecerLetraNIF(String letra);
-    
 
+    void irAPaginaDeInicio();
+    
+    void enfocarCampo(String campo);
 }

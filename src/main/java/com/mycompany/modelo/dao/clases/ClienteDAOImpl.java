@@ -50,7 +50,7 @@ public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
 
     @Override
     public boolean darDeBaja(Integer codigoCliente) {
-        String sql = "DELETE FROM Clientes WHERE id = ?";
+        String sql = "DELETE FROM Clientes WHERE codigo = ?";
         try(Connection connection = JDBC.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setInt(1, codigoCliente);
@@ -70,19 +70,23 @@ public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
                 + "codigo_postal = ?, "
                 + "localidad = ?, "
                 + "telefono = ?, "
-                + "fax = ?, "
-                + "email = ?";
+                + "fax = ?,"
+                + "movil = ?,"
+                + "email = ?"
+                + "WHERE codigo = ?";
         
         try(Connection connection = JDBC.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)){
-            statement.setString(1, cliente.getApellidos());
-            statement.setString(2, cliente.getNombre());
+            statement.setString(1, cliente.getNombre());
+            statement.setString(2, cliente.getApellidos());
             statement.setString(3, cliente.getDomicilio());
-            statement.setString(4, cliente.getLocalidad());
-            statement.setString(5, cliente.getCodigoPostal());
+            statement.setString(4, cliente.getCodigoPostal());
+            statement.setString(5, cliente.getLocalidad());
             statement.setString(6, cliente.getTelefono());
             statement.setString(7, cliente.getFax());
-            statement.setString(8, cliente.getEmail());
+            statement.setString(8, cliente.getMovil());
+            statement.setString(9, cliente.getEmail());
+            statement.setInt(10, cliente.getCodigo());
             
             return statement.executeUpdate() > 0;
             

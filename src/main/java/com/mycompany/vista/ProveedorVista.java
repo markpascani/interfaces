@@ -1,13 +1,15 @@
 package com.mycompany.vista;
 
-import com.mycompany.controlador.Controlador;
+import com.mycompany.controlador.ControladorBase;
+import com.mycompany.controlador.ControladorProveedor;
 import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
-import com.mycompany.modelo.entidades.Cliente;
-import java.awt.event.KeyEvent;
-import javax.swing.JOptionPane;
+import com.mycompany.modelo.entidades.Proveedor;
+import com.mycompany.vista.ClienteVista;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 /*
@@ -18,10 +20,64 @@ import javax.swing.JTextField;
  *
  * @author alumno
  */
-public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
+public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<Proveedor> {
 
-    private final Controlador controlador;
+    private ControladorProveedor controlador;
     private MODO modo = MODO.INACTIVO;
+
+    @Override
+    public void limitarEntradaALongitudMinYMax(JTextField campo, int min, int max) {
+        campo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // Si llegamos a la longitud máxima, bloqueamos
+                if (campo.getText().length() >= max) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void irAPaginaDeInicio() {
+        this.dispose();
+        new Inicio().setVisible(true);
+    }
+
+    @Override
+    public void enfocarCampo(String campo) {
+        switch (campo) {
+            case "campoNIF":
+                campoNIF.grabFocus();
+                break;
+            case "campoNombre":
+                campoNombre.grabFocus();
+                break;
+            case "campoApellidos":
+                campoApellidos.grabFocus();
+                break;
+            case "campoCP":
+                campoCP.grabFocus();
+                break;
+            case "campoTelefono":
+                campoTelefono.grabFocus();
+                break;
+            case "campoMovil":
+                campoMovil.grabFocus();
+                break;
+            case "campoFax":
+                campoFax.grabFocus();
+                break;
+            case "campoEmail":
+                campoEmail.grabFocus();
+                break;
+            case "campoCodigo":
+                campoCodigo.grabFocus();
+                break;
+            default:
+                break;
+        }
+    }
 
     public enum MODO {
         ALTA,
@@ -30,60 +86,16 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         INACTIVO
     }
 
-    public Clientes(Controlador controlador) {
+    public void setControlador(ControladorProveedor controlador) {
+        this.controlador = controlador;
+    }
+
+    /**
+     * Creates new form Proyecto
+     */
+    public ProveedorVista(ControladorProveedor controlador) {
         this.controlador = controlador;
         initComponents();
-        estadoInicial();
-
-        //Restricciones
-        limitarEntradaACifraConLongitudExacta(campoCP, 5);
-        limitarEntradaACifraConLongitudExacta(campoNIF, 8);
-        limitarEntradaACifraConLongitudExacta(campoTelefono, 9);
-        limitarEntradaACifraConLongitudExacta(campoFax, 9);
-        limitarEntradaACifraConLongitudExacta(campoMovil, 9);
-        limitarEntradaLetrasConLongitudMinYMax(campoNombre, 2, 15);
-        limitarEntradaLetrasConLongitudMinYMax(campoApellidos, 2, 35);
-        limitarEntradaLetrasConLongitudMinYMax(campoLocalidad, 2, 20);
-        limitarEntradaALongitudMinYMax(campoDomicilio, 5, 40);
-        comprobarEmail(campoEmail);
-
-        // Listener de Aceptar
-        botonAceptar.addActionListener(e -> {
-            switch (modo) {
-                case ALTA:
-                    if (comprobarCampos()) {
-
-                        controlador.altaCliente();
-                    }
-
-                    break;
-                case BAJA:
-                    if (comprobarCampos()) {
-
-                        controlador.bajaCliente();
-                    }
-                    break;
-                case MODIFICACION:
-                    if (comprobarCampos()) {
-
-                        controlador.modificarCliente();
-                    }
-                    break;
-                default:
-                    mostrarMensaje("No se ha seleccionado una operación.");
-            }
-            modo = MODO.INACTIVO;
-            cancelarAccion();
-        });
-
-        botonSalir.addActionListener(e -> {
-            estadoInicial();
-        });
-
-        botonCancelar.addActionListener(e -> {
-            cancelarAccion();
-        });
-
     }
 
     /**
@@ -114,7 +126,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         campoMovil = new javax.swing.JTextField();
-        campoTotalVentas = new javax.swing.JTextField();
+        campoTotalCompras = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         campoEmail = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
@@ -124,26 +136,20 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         botonSalir = new javax.swing.JButton();
         botonCancelar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
-        menuMantenimiento = new javax.swing.JMenu();
-        botonAlta = new javax.swing.JMenuItem();
-        botonBaja = new javax.swing.JMenuItem();
-        botonEditar = new javax.swing.JMenuItem();
+        Mantenimiento = new javax.swing.JMenu();
+        menuAlta = new javax.swing.JMenuItem();
+        menuBaja = new javax.swing.JMenuItem();
+        menuModificacion = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        botonVolver = new javax.swing.JMenuItem();
+        Volver = new javax.swing.JMenuItem();
         menuConsultas = new javax.swing.JMenu();
-        menuPorCodigo = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        informaCodigo = new javax.swing.JMenuItem();
+        menuListados = new javax.swing.JMenu();
+        listadoPorCodigo = new javax.swing.JMenuItem();
+        listadoEntreCodigos = new javax.swing.JMenuItem();
+        listadoGrafico = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        campoCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                campoCodigoKeyPressed(evt);
-            }
-        });
 
         jLabel1.setText("Código");
 
@@ -167,7 +173,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
 
         jLabel11.setText("e-mail");
 
-        jLabel12.setText("Total ventas");
+        jLabel12.setText("Total compras");
 
         botonAceptar.setText("Aceptar");
         botonAceptar.setEnabled(false);
@@ -178,56 +184,40 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         botonCancelar.setText("Cancelar");
         botonCancelar.setEnabled(false);
 
-        menuMantenimiento.setText("Mantenimiento");
-        menuMantenimiento.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                menuMantenimientoMousePressed(evt);
-            }
-        });
+        Mantenimiento.setText("Mantenimiento");
 
-        botonAlta.setText("Altas");
-        botonAlta.setVerifyInputWhenFocusTarget(false);
-        botonAlta.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                botonAltaMousePressed(evt);
-            }
-        });
-        menuMantenimiento.add(botonAlta);
+        menuAlta.setText("Alta");
+        Mantenimiento.add(menuAlta);
 
-        botonBaja.setText("Bajas");
-        botonBaja.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                botonBajaMousePressed(evt);
-            }
-        });
-        menuMantenimiento.add(botonBaja);
+        menuBaja.setText("Baja");
+        Mantenimiento.add(menuBaja);
 
-        botonEditar.setText("Modificaciones");
-        menuMantenimiento.add(botonEditar);
-        menuMantenimiento.add(jSeparator1);
+        menuModificacion.setText("Modificacion");
+        Mantenimiento.add(menuModificacion);
+        Mantenimiento.add(jSeparator1);
 
-        botonVolver.setText("Volver");
-        menuMantenimiento.add(botonVolver);
+        Volver.setText("Volver");
+        Mantenimiento.add(Volver);
 
-        jMenuBar1.add(menuMantenimiento);
+        jMenuBar1.add(Mantenimiento);
 
         menuConsultas.setText("Consultas");
 
-        menuPorCodigo.setText("Por código");
-        menuConsultas.add(menuPorCodigo);
+        informaCodigo.setText("Por Codigo");
+        menuConsultas.add(informaCodigo);
 
-        jMenu1.setText("Listados");
+        menuListados.setText("Listados");
 
-        jMenuItem3.setText("Por código");
-        jMenu1.add(jMenuItem3);
+        listadoPorCodigo.setText("Por Codigo");
+        menuListados.add(listadoPorCodigo);
 
-        jMenuItem4.setText("Entre códigos");
-        jMenu1.add(jMenuItem4);
+        listadoEntreCodigos.setText("Entre Codigos");
+        menuListados.add(listadoEntreCodigos);
 
-        jMenuItem2.setText("Gráficos");
-        jMenu1.add(jMenuItem2);
+        listadoGrafico.setText("Grafico");
+        menuListados.add(listadoGrafico);
 
-        menuConsultas.add(jMenu1);
+        menuConsultas.add(menuListados);
 
         jMenuBar1.add(menuConsultas);
 
@@ -239,7 +229,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5)
                     .addComponent(campoDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
@@ -250,12 +240,12 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
                             .addComponent(jLabel1))
                         .addGap(33, 33, 33)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(campoNIF, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(letraNif, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel2))
-                        .addGap(40, 40, 40)
+                                .addComponent(letraNif, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(33, 33, 33)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(campoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -269,22 +259,20 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
                             .addComponent(campoLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(campoMovil, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel10)
-                                    .addComponent(campoFax, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(jLabel9)
+                            .addComponent(campoMovil, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(campoEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(campoEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel11))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel10)
+                                .addComponent(campoFax, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(64, 64, 64)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
-                            .addComponent(campoTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(campoTotalCompras))))
                 .addContainerGap(59, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -342,8 +330,8 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(campoEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(campoTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                    .addComponent(campoTotalCompras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonAceptar)
                     .addComponent(botonSalir)
@@ -354,60 +342,10 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void botonAltaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonAltaMousePressed
-        // TODO add your handling code here:
-
-        //Se limpian los campos y se deja habilitado solo el campo codigo
-        modo = MODO.ALTA;
-        cancelarAccion();
-    }//GEN-LAST:event_botonAltaMousePressed
-
-    private void botonBajaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonBajaMousePressed
-        // TODO add your handling code here:
-        //Se limpian los campos y se deja habilitado solo el campo codigo
-        modo = MODO.BAJA;
-        cancelarAccion();
-    }//GEN-LAST:event_botonBajaMousePressed
-
-    private void campoCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoCodigoKeyPressed
-        // TODO add your handling code here:
-        boolean existeCodigo;
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !campoCodigo.getText().isEmpty()) {
-            switch (modo) {
-                case BAJA:
-                    if (controlador.comprobarExistenciaDelCliente()) {
-                        controlador.activarFormulario(true);
-                    }
-                    break;
-                case MODIFICACION:
-                    if (controlador.comprobarExistenciaDelCliente()) {
-                        controlador.activarFormulario(true);
-                    }
-                    break;
-
-                case ALTA:
-                    if (!controlador.comprobarExistenciaDelCliente()) {
-                        controlador.activarFormulario(true);
-                    }
-                    break;
-                // INACTIVO no hace nada en Enter.
-                default:
-                    break;
-            }
-        }
-    }//GEN-LAST:event_campoCodigoKeyPressed
-
-    private void menuMantenimientoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuMantenimientoMousePressed
-        // TODO add your handling code here:
-        modo = MODO.MODIFICACION;
-        cancelarAccion();
-    }//GEN-LAST:event_menuMantenimientoMousePressed
-
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -421,33 +359,31 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Clientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClienteVista.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
+        IGenericDAO clienteDAO = new ClienteDAOImpl();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu Mantenimiento;
+    private javax.swing.JMenuItem Volver;
     private javax.swing.JButton botonAceptar;
-    private javax.swing.JMenuItem botonAlta;
-    private javax.swing.JMenuItem botonBaja;
     private javax.swing.JButton botonCancelar;
-    private javax.swing.JMenuItem botonEditar;
     private javax.swing.JButton botonSalir;
-    private javax.swing.JMenuItem botonVolver;
     private javax.swing.JTextField campoApellidos;
     private javax.swing.JTextField campoCP;
     private javax.swing.JTextField campoCodigo;
@@ -459,7 +395,8 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
     private javax.swing.JTextField campoNIF;
     private javax.swing.JTextField campoNombre;
     private javax.swing.JTextField campoTelefono;
-    private javax.swing.JTextField campoTotalVentas;
+    private javax.swing.JTextField campoTotalCompras;
+    private javax.swing.JMenuItem informaCodigo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -472,16 +409,17 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTextField letraNif;
+    private javax.swing.JMenuItem listadoEntreCodigos;
+    private javax.swing.JMenuItem listadoGrafico;
+    private javax.swing.JMenuItem listadoPorCodigo;
+    private javax.swing.JMenuItem menuAlta;
+    private javax.swing.JMenuItem menuBaja;
     private javax.swing.JMenu menuConsultas;
-    private javax.swing.JMenu menuMantenimiento;
-    private javax.swing.JMenuItem menuPorCodigo;
+    private javax.swing.JMenu menuListados;
+    private javax.swing.JMenuItem menuModificacion;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -497,7 +435,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         campoTelefono.setText("");
         campoMovil.setText("");
         campoFax.setText("");
-        campoTotalVentas.setText("");
+        campoTotalCompras.setText("");
         campoEmail.setText("");
     }
 
@@ -505,7 +443,6 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
     public void estadoCampos(boolean estado) {
         campoApellidos.setEnabled(estado);
         campoNombre.setEnabled(estado);
-        letraNif.setEnabled(estado);
         campoDomicilio.setEnabled(estado);
         campoLocalidad.setEnabled(estado);
         campoCP.setEnabled(estado);
@@ -525,12 +462,15 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
             campoCodigo.setEnabled(!estado);
         }
 
-        if (estado = false) {
+        if (!estado) {
             campoCodigo.grabFocus();
         } else {
-            campoApellidos.grabFocus();
+            campoNIF.grabFocus();
         }
 
+        if (modo == MODO.ALTA && estado) {
+            campoTotalCompras.setText("0");
+        }
     }
 
     @Override
@@ -539,47 +479,43 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
     }
 
     @Override
-    public Cliente obtenerClienteDeFormulario() {
-        // Construyes un Cliente con los datos actuales de la vista
-        Cliente c = new Cliente();
-        // Ojo con el parseo de campos numéricos
+    public Proveedor obtenerEntidadDelFormulario() {
+        Proveedor p = new Proveedor();
         try {
-            c.setCodigo(Integer.parseInt(campoCodigo.getText()));
+            p.setCodigo(Integer.parseInt(campoCodigo.getText()));
         } catch (NumberFormatException e) {
-            // Manejo de error si no es número
-            c.setCodigo(-1);
+            p.setCodigo(-1);
         }
 
-        c.setNif(campoNIF.getText() + letraNif.getText());
-        c.setNombre(campoNombre.getText());
-        c.setApellidos(campoApellidos.getText());
-        c.setDomicilio(campoDomicilio.getText());
-        c.setLocalidad(campoLocalidad.getText());
-        c.setCodigoPostal(campoCP.getText());
-        c.setTelefono(campoTelefono.getText());
-        c.setMovil(campoMovil.getText());
-        c.setFax(campoFax.getText());
-        c.setEmail(campoEmail.getText());
+        p.setNif(campoNIF.getText() + letraNif.getText());
+        p.setNombre(campoNombre.getText());
+        p.setApellidos(campoApellidos.getText());
+        p.setDomicilio(campoDomicilio.getText());
+        p.setLocalidad(campoLocalidad.getText());
+        p.setCodigoPostal(campoCP.getText());
+        p.setTelefono(campoTelefono.getText());
+        p.setMovil(campoMovil.getText());
+        p.setFax(campoFax.getText());
+        p.setEmail(campoEmail.getText());
 
         try {
-            c.setTotalVentas(Float.parseFloat(campoTotalVentas.getText()));
+            p.setTotalCompras(Float.parseFloat(campoTotalCompras.getText()));
         } catch (NumberFormatException e) {
-            c.setTotalVentas(0);
+            p.setTotalCompras(0);
         }
-        return c;
+        return p;
     }
 
     @Override
-    public void mostrarCliente(Cliente entidad) {
+    public void mostrarEntidad(Proveedor entidad) {
         if (entidad == null) {
             return;
         }
-        // Rellena los campos con los datos del cliente
         campoCodigo.setText(String.valueOf(entidad.getCodigo()));
 
         String nifCompleto = entidad.getNif();
-        campoNIF.setText(nifCompleto.substring(0, 8));   // las 8 cifras
-        letraNif.setText(nifCompleto.substring(8));      // la letra
+        campoNIF.setText(nifCompleto.substring(0, 8));
+        letraNif.setText(nifCompleto.substring(8));
         campoNombre.setText(entidad.getNombre());
         campoApellidos.setText(entidad.getApellidos());
         campoDomicilio.setText(entidad.getDomicilio());
@@ -589,16 +525,15 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         campoMovil.setText(entidad.getMovil());
         campoFax.setText(entidad.getFax());
         campoEmail.setText(entidad.getEmail());
-        campoTotalVentas.setText(String.valueOf(entidad.getTotalVentas()));
+        campoTotalCompras.setText(String.valueOf(entidad.getTotalCompras()));
     }
 
     @Override
-    public int obtenerCodigoCliente() {
-        // Lee el campo y devuelve un entero
+    public int obtenerCodigoEntidad() {
         try {
             return Integer.parseInt(campoCodigo.getText());
         } catch (NumberFormatException e) {
-            return -1; // valor para indicar error
+            return -1;
         }
     }
 
@@ -606,7 +541,8 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
     public void estadoInicial() {
         modo = MODO.INACTIVO;
         cancelarAccion();
-        campoTotalVentas.setEnabled(false);
+        campoTotalCompras.setEnabled(false);
+        letraNif.setEnabled(false);
     }
 
     @Override
@@ -616,85 +552,14 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
     }
 
     @Override
-    public boolean comprobarCampos() {
-        // 1) NIF: exactamente 8 caracteres
-        if (campoNIF.getText().length() != 8) {
-            mostrarMensaje("El NIF debe tener exactamente 8 dígitos.");
-            return false;
-        }
-
-        // 2) Código Postal: 5 exactas
-        if (campoCP.getText().length() != 5) {
-            mostrarMensaje("El código postal debe tener 5 cifras.");
-            return false;
-        }
-
-        // 3) Teléfono, Móvil y Fax: 0 (vacío) o 9 dígitos
-        //    si quieres permitir que estén en blanco, asume length = 0 es válido
-        int telLength = campoTelefono.getText().length();
-        if (telLength != 0 && telLength != 9) {
-            mostrarMensaje("El teléfono debe tener 9 dígitos o estar vacío.");
-            return false;
-        }
-
-        int movilLength = campoMovil.getText().length();
-        if (movilLength != 0 && movilLength != 9) {
-            mostrarMensaje("El móvil debe tener 9 dígitos o estar vacío.");
-            return false;
-        }
-
-        int faxLength = campoFax.getText().length();
-        if (faxLength != 0 && faxLength != 9) {
-            mostrarMensaje("El fax debe tener 9 dígitos o estar vacío.");
-            return false;
-        }
-
-        // 4) Email: no más de 40
-        if (campoEmail.getText().length() > 40) {
-            mostrarMensaje("El correo electrónico no puede tener más de 40 caracteres.");
-            return false;
-        }
-
-        // 5) Localidad: no más de 20
-        if (campoLocalidad.getText().length() > 20) {
-            mostrarMensaje("La localidad no puede tener más de 20 caracteres.");
-            return false;
-        }
-
-        // 6) Domicilio: no más de 40
-        if (campoDomicilio.getText().length() > 40) {
-            mostrarMensaje("El domicilio no puede tener más de 40 caracteres.");
-            return false;
-        }
-
-        // 7) Nombre: no más de 15
-        if (campoNombre.getText().length() > 15) {
-            mostrarMensaje("El nombre no puede tener más de 15 caracteres.");
-            return false;
-        }
-
-        // 8) Apellidos: no más de 35
-        if (campoApellidos.getText().length() > 35) {
-            mostrarMensaje("Los apellidos no pueden tener más de 35 caracteres.");
-            return false;
-        }
-
-        // Si llegamos hasta aquí, todo cumple
-        return true;
-    }
-
-    @Override
     public void limitarEntradaLetrasConLongitudMinYMax(JTextField campo, int min, int max) {
         campo.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                // Si no es letra, lo bloqueamos
-                if (!Character.isLetter(c)) {
+                if (!Character.isLetter(e.getKeyChar())) {
                     e.consume();
                     return;
                 }
-                // Si ya alcanzamos la longitud máxima, bloqueamos
                 if (campo.getText().length() >= max) {
                     e.consume();
                 }
@@ -707,12 +572,10 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
         campo.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                // Bloqueamos si no es dígito
                 if (!Character.isDigit(e.getKeyChar())) {
                     e.consume();
                     return;
                 }
-                // Bloqueamos si alcanzamos la longitud exacta
                 if (campo.getText().length() >= longitud) {
                     e.consume();
                 }
@@ -726,11 +589,8 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
             @Override
             public void keyReleased(KeyEvent e) {
                 String texto = campo.getText().trim();
-                // Patrón mínimo de email (muy básico)
                 String patron = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
                 if (!texto.matches(patron)) {
-                    // Muestra alerta, colorea el campo, etc.
-                    // o se lo dejas al final, depende de tu necesidad
                     campo.setBackground(Color.PINK);
                 } else {
                     campo.setBackground(Color.WHITE);
@@ -740,20 +600,7 @@ public class Clientes extends javax.swing.JFrame implements IVista<Cliente> {
     }
 
     @Override
-    public void limitarEntradaALongitudMinYMax(JTextField campo, int min, int max) {
-        campo.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                // Si llegamos a la longitud máxima, bloqueamos
-                if (campo.getText().length() >= max) {
-                    e.consume();
-                }
-            }
-        });
-    }
-
-    @Override
-    public int obtenerCifrasNIFCliente() {
+    public int obtenerCifrasNIF() {
         int cifras = 0;
         try {
             cifras = Integer.parseInt(campoNIF.getText());

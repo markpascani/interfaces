@@ -1,8 +1,10 @@
 package com.mycompany.vista;
 
-import com.mycompany.controlador.Controlador;
+import com.mycompany.controlador.ControladorBase;
+import com.mycompany.controlador.ControladorCliente;
 import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
+import com.mycompany.modelo.entidades.Cliente;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -96,25 +98,18 @@ public class Inicio extends javax.swing.JFrame {
 
     private void menuClientesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuClientesMousePressed
         // TODO add your handling code here:
-        IGenericDAO clienteDAO = new ClienteDAOImpl();
-        Controlador controlador = new Controlador(clienteDAO);
-        Clientes clientes = new Clientes(controlador);
-        controlador.setVista(clientes);
-        clientes.setVisible(true);
+        GestorVistas.mostrarClientes();
         this.dispose();
     }//GEN-LAST:event_menuClientesMousePressed
 
     private void menuProveedoresMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuProveedoresMousePressed
         // TODO add your handling code here:
-        Articulos articulo = new Articulos();
-        articulo.setVisible(true);
+        GestorVistas.mostrarProveedores();
         this.dispose();
     }//GEN-LAST:event_menuProveedoresMousePressed
 
     private void menuArticulosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuArticulosMousePressed
         // TODO add your handling code here:
-        Proveedor proveedor = new Proveedor();
-        proveedor.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_menuArticulosMousePressed
 

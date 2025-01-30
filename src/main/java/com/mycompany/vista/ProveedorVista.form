@@ -4,39 +4,29 @@
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
-        <Menu class="javax.swing.JMenu" name="menuMantenimiento">
+        <Menu class="javax.swing.JMenu" name="Mantenimiento">
           <Properties>
             <Property name="text" type="java.lang.String" value="Mantenimiento"/>
           </Properties>
-          <Events>
-            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="menuMantenimientoMousePressed"/>
-          </Events>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="botonAlta">
+            <MenuItem class="javax.swing.JMenuItem" name="menuAlta">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Altas"/>
-                <Property name="verifyInputWhenFocusTarget" type="boolean" value="false"/>
+                <Property name="text" type="java.lang.String" value="Alta"/>
               </Properties>
-              <Events>
-                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="botonAltaMousePressed"/>
-              </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="botonBaja">
+            <MenuItem class="javax.swing.JMenuItem" name="menuBaja">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Bajas"/>
+                <Property name="text" type="java.lang.String" value="Baja"/>
               </Properties>
-              <Events>
-                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="botonBajaMousePressed"/>
-              </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="botonEditar">
+            <MenuItem class="javax.swing.JMenuItem" name="menuModificacion">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Modificaciones"/>
+                <Property name="text" type="java.lang.String" value="Modificacion"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="botonVolver">
+            <MenuItem class="javax.swing.JMenuItem" name="Volver">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Volver"/>
               </Properties>
@@ -48,29 +38,29 @@
             <Property name="text" type="java.lang.String" value="Consultas"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="menuPorCodigo">
+            <MenuItem class="javax.swing.JMenuItem" name="informaCodigo">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Por c&#xf3;digo"/>
+                <Property name="text" type="java.lang.String" value="Por Codigo"/>
               </Properties>
             </MenuItem>
-            <Menu class="javax.swing.JMenu" name="jMenu1">
+            <Menu class="javax.swing.JMenu" name="menuListados">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Listados"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+                <MenuItem class="javax.swing.JMenuItem" name="listadoPorCodigo">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Por c&#xf3;digo"/>
+                    <Property name="text" type="java.lang.String" value="Por Codigo"/>
                   </Properties>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
+                <MenuItem class="javax.swing.JMenuItem" name="listadoEntreCodigos">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Entre c&#xf3;digos"/>
+                    <Property name="text" type="java.lang.String" value="Entre Codigos"/>
                   </Properties>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+                <MenuItem class="javax.swing.JMenuItem" name="listadoGrafico">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Gr&#xe1;ficos"/>
+                    <Property name="text" type="java.lang.String" value="Grafico"/>
                   </Properties>
                 </MenuItem>
               </SubComponents>
@@ -105,7 +95,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                   <Component id="campoDomicilio" min="-2" pref="494" max="-2" attributes="0"/>
                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
@@ -117,14 +107,14 @@
                       </Group>
                       <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="campoNIF" min="-2" pref="87" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="letraNif" min="-2" pref="19" max="-2" attributes="0"/>
+                              <Component id="letraNif" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                           <Component id="campoNombre" min="-2" pref="216" max="-2" attributes="0"/>
@@ -141,28 +131,25 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                           <Component id="campoLocalidad" min="-2" pref="301" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="campoMovil" alignment="0" min="-2" pref="65" max="-2" attributes="0"/>
-                                  <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                                  <Component id="campoFax" min="-2" pref="65" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="campoMovil" alignment="0" min="-2" pref="91" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="campoEmail" alignment="0" min="-2" pref="347" max="-2" attributes="0"/>
-                          <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="campoEmail" alignment="0" min="-2" pref="347" max="-2" attributes="0"/>
+                              <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                              <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                              <Component id="campoFax" min="-2" pref="91" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                          <Component id="campoTotalVentas" min="-2" pref="65" max="-2" attributes="0"/>
+                          <Component id="campoTotalCompras" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -233,9 +220,9 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="campoEmail" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="campoTotalVentas" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="campoTotalCompras" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="45" max="32767" attributes="0"/>
+              <EmptySpace pref="41" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="botonAceptar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="botonSalir" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -248,9 +235,6 @@
   </Layout>
   <SubComponents>
     <Component class="javax.swing.JTextField" name="campoCodigo">
-      <Events>
-        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="campoCodigoKeyPressed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="campoNIF">
     </Component>
@@ -315,7 +299,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="campoMovil">
     </Component>
-    <Component class="javax.swing.JTextField" name="campoTotalVentas">
+    <Component class="javax.swing.JTextField" name="campoTotalCompras">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel10">
       <Properties>
@@ -333,7 +317,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel12">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Total ventas"/>
+        <Property name="text" type="java.lang.String" value="Total compras"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="botonAceptar">
