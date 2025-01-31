@@ -1,5 +1,6 @@
 package com.mycompany.vista;
 
+import com.mycompany.controlador.GestorVistas;
 import com.mycompany.controlador.ControladorBase;
 import com.mycompany.controlador.ControladorCliente;
 import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
@@ -110,6 +111,7 @@ public class Inicio extends javax.swing.JFrame {
 
     private void menuArticulosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuArticulosMousePressed
         // TODO add your handling code here:
+        GestorVistas.mostrarArticulos();
         this.dispose();
     }//GEN-LAST:event_menuArticulosMousePressed
 

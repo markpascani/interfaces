@@ -1,5 +1,6 @@
 package com.mycompany.vista;
 
+import com.mycompany.vista.interfaces.IVistaConNIF;
 import com.mycompany.controlador.ControladorCliente;
 import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
 import com.mycompany.modelo.entidades.Cliente;

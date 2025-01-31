@@ -5,9 +5,10 @@
 package com.mycompany.controlador;
 
 import com.mycompany.modelo.entidades.Cliente;
-import com.mycompany.vista.IVista;
+import com.mycompany.vista.interfaces.IVista;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 import com.mycompany.modelo.entidades.Proveedor;
+import com.mycompany.vista.ArticulosVista;
 import com.mycompany.vista.ClienteVista;
 import com.mycompany.vista.ProveedorVista;
 
@@ -94,10 +95,43 @@ public abstract class ControladorBase<T> {
             return manejarExistencia((ClienteVista.MODO) modo, existe, codigo);
         } else if (modo instanceof ProveedorVista.MODO) {
             return manejarExistencia((ProveedorVista.MODO) modo, existe, codigo);
+        } else if (modo instanceof ArticulosVista.MODO) {
+            return manejarExistencia((ArticulosVista.MODO) modo, existe, codigo);
         }
 
         vista.mostrarMensaje("Modo desconocido.");
         return false;
+    }
+
+    private boolean manejarExistencia(ArticulosVista.MODO modo, boolean existe, int codigo) {
+        switch (modo) {
+            case ALTA:
+                if (existe) {
+                    vista.mostrarMensaje("El codigo ya existe. No se puede dar de alta");
+                    return false;
+                }
+                vista.estadoCampos(true);
+                return true;
+            case BAJA:
+                if (!existe) {
+                    vista.mostrarMensaje("El código no existe. No se puede dar de baja.");
+                    return false;
+                }
+                vista.mostrarEntidad(dao.obtenerPorID(codigo));
+                vista.estadoCampos(false);
+                return true;
+            case MODIFICACION:
+                if (!existe) {
+                    vista.mostrarMensaje("El código no existe. No se puede modificar.");
+                    return false;
+                }
+                vista.mostrarEntidad(dao.obtenerPorID(codigo));
+                vista.estadoCampos(true);
+                return true;
+            default:
+                vista.mostrarMensaje("Modo desconocido.");
+                return false;
+        }
     }
 
     private boolean manejarExistencia(ClienteVista.MODO modo, boolean existe, int codigo) {

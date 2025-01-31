@@ -6,7 +6,7 @@ package com.mycompany.controlador;
 
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 import com.mycompany.modelo.entidades.Proveedor;
-import com.mycompany.vista.IVistaConNIF;
+import com.mycompany.vista.interfaces.IVistaConNIF;
 import com.mycompany.vista.ProveedorVista;
 
 /**

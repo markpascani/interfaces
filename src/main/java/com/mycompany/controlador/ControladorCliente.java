@@ -7,8 +7,8 @@ package com.mycompany.controlador;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 import com.mycompany.modelo.entidades.Cliente;
 import com.mycompany.vista.ClienteVista;
-import com.mycompany.vista.IVista;
-import com.mycompany.vista.IVistaConNIF;
+import com.mycompany.vista.interfaces.IVista;
+import com.mycompany.vista.interfaces.IVistaConNIF;
 
 /**
  *

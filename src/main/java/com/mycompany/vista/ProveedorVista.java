@@ -1,5 +1,6 @@
 package com.mycompany.vista;
 
+import com.mycompany.vista.interfaces.IVistaConNIF;
 import com.mycompany.controlador.ControladorBase;
 import com.mycompany.controlador.ControladorProveedor;
 import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
@@ -96,6 +97,40 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
     public ProveedorVista(ControladorProveedor controlador) {
         this.controlador = controlador;
         initComponents();
+        estadoInicial();
+        // Restricciones para la entrada de datos (igual que en ClienteVista)
+        limitarEntradaACifraConLongitudExacta(campoCP, 5);
+        limitarEntradaACifraConLongitudExacta(campoNIF, 8);
+        limitarEntradaACifraConLongitudExacta(campoTelefono, 9);
+        limitarEntradaACifraConLongitudExacta(campoFax, 9);
+        limitarEntradaACifraConLongitudExacta(campoMovil, 9);
+        limitarEntradaLetrasConLongitudMinYMax(campoNombre, 2, 15);
+        limitarEntradaLetrasConLongitudMinYMax(campoApellidos, 2, 35);
+        limitarEntradaLetrasConLongitudMinYMax(campoLocalidad, 2, 20);
+        limitarEntradaALongitudMinYMax(campoDomicilio, 5, 40);
+        comprobarEmail(campoEmail);
+
+        campoNIF.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                controlador.manejarNIF(campoNIF.getText().trim());
+            }
+        });
+        botonAceptar.addActionListener(e -> controlador.gestionarOperacion(modo));
+
+        botonSalir.addActionListener(e -> {
+            estadoInicial();
+        });
+
+        botonCancelar.addActionListener(e -> {
+            cancelarAccion();
+        });
+
+        botonVolver.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                controlador.volverAPaginaDeInicio();
+            }
+        });
     }
 
     /**
@@ -141,7 +176,7 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
         menuBaja = new javax.swing.JMenuItem();
         menuModificacion = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        Volver = new javax.swing.JMenuItem();
+        botonVolver = new javax.swing.JMenuItem();
         menuConsultas = new javax.swing.JMenu();
         informaCodigo = new javax.swing.JMenuItem();
         menuListados = new javax.swing.JMenu();
@@ -150,6 +185,12 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
         listadoGrafico = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        campoCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                campoCodigoKeyPressed(evt);
+            }
+        });
 
         jLabel1.setText("Código");
 
@@ -187,17 +228,32 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
         Mantenimiento.setText("Mantenimiento");
 
         menuAlta.setText("Alta");
+        menuAlta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                menuAltaMousePressed(evt);
+            }
+        });
         Mantenimiento.add(menuAlta);
 
         menuBaja.setText("Baja");
+        menuBaja.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                menuBajaMousePressed(evt);
+            }
+        });
         Mantenimiento.add(menuBaja);
 
         menuModificacion.setText("Modificacion");
+        menuModificacion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                menuModificacionMousePressed(evt);
+            }
+        });
         Mantenimiento.add(menuModificacion);
         Mantenimiento.add(jSeparator1);
 
-        Volver.setText("Volver");
-        Mantenimiento.add(Volver);
+        botonVolver.setText("Volver");
+        Mantenimiento.add(botonVolver);
 
         jMenuBar1.add(Mantenimiento);
 
@@ -342,6 +398,31 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void menuAltaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuAltaMousePressed
+        // TODO add your handling code here:
+        modo = MODO.ALTA;
+        cancelarAccion();
+    }//GEN-LAST:event_menuAltaMousePressed
+
+    private void menuBajaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuBajaMousePressed
+        // TODO add your handling code here:
+        modo = MODO.BAJA;
+        cancelarAccion();
+    }//GEN-LAST:event_menuBajaMousePressed
+
+    private void menuModificacionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuModificacionMousePressed
+        // TODO add your handling code here:
+        modo = MODO.MODIFICACION;
+        cancelarAccion();
+    }//GEN-LAST:event_menuModificacionMousePressed
+
+    private void campoCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoCodigoKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && !campoCodigo.getText().isEmpty()) {
+            controlador.verificarCodigo(modo);
+        }
+    }//GEN-LAST:event_campoCodigoKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -380,10 +461,10 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu Mantenimiento;
-    private javax.swing.JMenuItem Volver;
     private javax.swing.JButton botonAceptar;
     private javax.swing.JButton botonCancelar;
     private javax.swing.JButton botonSalir;
+    private javax.swing.JMenuItem botonVolver;
     private javax.swing.JTextField campoApellidos;
     private javax.swing.JTextField campoCP;
     private javax.swing.JTextField campoCodigo;
