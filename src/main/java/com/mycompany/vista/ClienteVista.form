@@ -52,23 +52,29 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Por c&#xf3;digo"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="menuPorCodigoMousePressed"/>
+              </Events>
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="jMenu1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Listados"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+                <MenuItem class="javax.swing.JMenuItem" name="listadoPorCodigo">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Por c&#xf3;digo"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="listadoPorCodigoMousePressed"/>
+                  </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
+                <MenuItem class="javax.swing.JMenuItem" name="listadoEntreCodigos">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Entre c&#xf3;digos"/>
                   </Properties>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+                <MenuItem class="javax.swing.JMenuItem" name="grafico">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Gr&#xe1;ficos"/>
                   </Properties>

@@ -448,7 +448,15 @@ public class ArticulosVista extends javax.swing.JFrame implements IVista<Articul
         campo.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                if (!Character.isLetter(e.getKeyChar()) || campo.getText().length() >= max) {
+                char c = e.getKeyChar();
+                // Permitimos letras y espacios
+                if (!Character.isLetter(c) && c != ' ') {
+                    e.consume(); // Bloquea cualquier otro carácter
+                    return;
+                }
+
+                // Bloquear si supera el tamaño máximo
+                if (campo.getText().length() >= max) {
                     e.consume();
                 }
             }

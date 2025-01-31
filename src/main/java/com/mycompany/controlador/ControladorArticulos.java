@@ -16,8 +16,6 @@ import com.mycompany.vista.interfaces.IVista;
  */
 public class ControladorArticulos extends ControladorBase<Articulo> {
 
-    private final IVista<Articulo> vista;
-
     public ControladorArticulos(IGenericDAO<Articulo, Integer> dao, IVista<Articulo> vista) {
         super(dao);
         this.vista = vista;

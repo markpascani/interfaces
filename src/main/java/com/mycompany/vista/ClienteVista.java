@@ -7,9 +7,18 @@ import com.mycompany.modelo.entidades.Cliente;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
+import com.mycompany.utils.JDBC;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -125,9 +134,9 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         menuConsultas = new javax.swing.JMenu();
         menuPorCodigo = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        listadoPorCodigo = new javax.swing.JMenuItem();
+        listadoEntreCodigos = new javax.swing.JMenuItem();
+        grafico = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -206,18 +215,28 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         menuConsultas.setText("Consultas");
 
         menuPorCodigo.setText("Por código");
+        menuPorCodigo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                menuPorCodigoMousePressed(evt);
+            }
+        });
         menuConsultas.add(menuPorCodigo);
 
         jMenu1.setText("Listados");
 
-        jMenuItem3.setText("Por código");
-        jMenu1.add(jMenuItem3);
+        listadoPorCodigo.setText("Por código");
+        listadoPorCodigo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listadoPorCodigoMousePressed(evt);
+            }
+        });
+        jMenu1.add(listadoPorCodigo);
 
-        jMenuItem4.setText("Entre códigos");
-        jMenu1.add(jMenuItem4);
+        listadoEntreCodigos.setText("Entre códigos");
+        jMenu1.add(listadoEntreCodigos);
 
-        jMenuItem2.setText("Gráficos");
-        jMenu1.add(jMenuItem2);
+        grafico.setText("Gráficos");
+        jMenu1.add(grafico);
 
         menuConsultas.add(jMenu1);
 
@@ -374,6 +393,15 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         cancelarAccion();
     }//GEN-LAST:event_botonEditarMousePressed
 
+    private void menuPorCodigoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuPorCodigoMousePressed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_menuPorCodigoMousePressed
+
+    private void listadoPorCodigoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listadoPorCodigoMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_listadoPorCodigoMousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -433,6 +461,7 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
     private javax.swing.JTextField campoNombre;
     private javax.swing.JTextField campoTelefono;
     private javax.swing.JTextField campoTotalVentas;
+    private javax.swing.JMenuItem grafico;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -447,11 +476,10 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTextField letraNif;
+    private javax.swing.JMenuItem listadoEntreCodigos;
+    private javax.swing.JMenuItem listadoPorCodigo;
     private javax.swing.JMenu menuConsultas;
     private javax.swing.JMenu menuMantenimiento;
     private javax.swing.JMenuItem menuPorCodigo;
@@ -717,4 +745,28 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
                 break;
         }
     }
+    
+    private void generarListadoPorCodigo() {
+    try {
+        // Cargar el archivo del reporte Jasper
+        JasperReport reporte = JasperCompileManager.compileReport("src/reports/ReportePorCodigo.jrxml");
+
+        // Crear un mapa de parámetros
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("codigo", Integer.parseInt(campoCodigo.getText())); // Obtener el código ingresado
+
+        // Llenar el informe con datos desde la BD
+        JasperPrint print = JasperFillManager.fillReport(reporte, parametros, JDBC.getConnection());
+
+        // Mostrar el informe en un visor
+        JasperViewer jasperViewer = new JasperViewer(print, false);
+
+        jasperViewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            jasperViewer.setVisible(true);
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error al generar el listado por código.");
+    }
+}
+
 }

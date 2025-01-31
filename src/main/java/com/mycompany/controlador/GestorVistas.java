@@ -47,10 +47,9 @@ public class GestorVistas {
 
     public static void mostrarArticulos() {
         IGenericDAO<Articulo, Integer> articuloDAO = new ArticuloDAOImpl();
-        ArticulosVista articulosVista = new ArticulosVista(null); // Inicialmente null para evitar el error
-        ControladorArticulos controlador = new ControladorArticulos(articuloDAO, articulosVista);
-        articulosVista.setControlador(controlador); // Asigna correctamente el controlador a la vista
-        controlador.setVista(articulosVista); // Asegura que la vista en el controlador no sea null
+        ControladorArticulos controlador = new ControladorArticulos(articuloDAO, null);
+        ArticulosVista articulosVista = new ArticulosVista(controlador);
+        controlador.setVista(articulosVista);
         articulosVista.setVisible(true);
     }
 }

@@ -110,26 +110,19 @@ public abstract class ControladorBase<T> {
                     vista.mostrarMensaje("El codigo ya existe. No se puede dar de alta");
                     return false;
                 }
-                vista.estadoCampos(true);
+                activarFormulario(true);
                 return true;
             case BAJA:
-                if (!existe) {
-                    vista.mostrarMensaje("El código no existe. No se puede dar de baja.");
-                    return false;
-                }
-                vista.mostrarEntidad(dao.obtenerPorID(codigo));
-                vista.estadoCampos(false);
-                return true;
             case MODIFICACION:
                 if (!existe) {
                     vista.mostrarMensaje("El código no existe. No se puede modificar.");
                     return false;
                 }
-                vista.mostrarEntidad(dao.obtenerPorID(codigo));
-                vista.estadoCampos(true);
+                T entidad = dao.obtenerPorID(codigo);
+                vista.mostrarEntidad(entidad);
+                activarFormulario(true);
                 return true;
             default:
-                vista.mostrarMensaje("Modo desconocido.");
                 return false;
         }
     }
