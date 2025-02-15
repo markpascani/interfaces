@@ -73,11 +73,17 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Entre c&#xf3;digos"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="listadoEntreCodigosMousePressed"/>
+                  </Events>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="grafico">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Gr&#xe1;ficos"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="graficoMousePressed"/>
+                  </Events>
                 </MenuItem>
               </SubComponents>
             </Menu>

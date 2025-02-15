@@ -47,10 +47,13 @@
             <Property name="text" type="java.lang.String" value="Consultas"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="informaCodigo">
+            <MenuItem class="javax.swing.JMenuItem" name="porCodigo">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Por Codigo"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="porCodigoMousePressed"/>
+              </Events>
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="menuListados">
               <Properties>
@@ -61,16 +64,25 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Por Codigo"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="listadoPorCodigoMousePressed"/>
+                  </Events>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="listadoEntreCodigos">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Entre Codigos"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="listadoEntreCodigosMousePressed"/>
+                  </Events>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="listadoGrafico">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Grafico"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="listadoGraficoMousePressed"/>
+                  </Events>
                 </MenuItem>
               </SubComponents>
             </Menu>

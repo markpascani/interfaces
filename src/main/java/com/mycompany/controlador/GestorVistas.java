@@ -12,10 +12,13 @@ import com.mycompany.modelo.dao.clases.ProveedorDAOImpl;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 import com.mycompany.modelo.entidades.Articulo;
 import com.mycompany.modelo.entidades.Cliente;
+import com.mycompany.modelo.entidades.Pedido;
 import com.mycompany.modelo.entidades.Proveedor;
 import com.mycompany.vista.ArticulosVista;
 import com.mycompany.vista.ClienteVista;
+import com.mycompany.vista.PedidosVista;
 import com.mycompany.vista.ProveedorVista;
+import com.mycompany.vista.interfaces.IVista;
 
 /**
  *
@@ -51,5 +54,10 @@ public class GestorVistas {
         ArticulosVista articulosVista = new ArticulosVista(controlador);
         controlador.setVista(articulosVista);
         articulosVista.setVisible(true);
+    }
+    
+    public static void mostrarPedidos(){
+        PedidosVista vistaPedidos = new PedidosVista();
+        vistaPedidos.setVisible(true);
     }
 }

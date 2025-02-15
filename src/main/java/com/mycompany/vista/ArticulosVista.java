@@ -2,6 +2,7 @@ package com.mycompany.vista;
 
 import com.mycompany.controlador.ControladorArticulos;
 import com.mycompany.modelo.entidades.Articulo;
+import com.mycompany.modelo.utils.InformeJasper;
 import com.mycompany.vista.interfaces.IVista;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -25,7 +26,8 @@ public class ArticulosVista extends javax.swing.JFrame implements IVista<Articul
         ALTA,
         BAJA,
         MODIFICACION,
-        INACTIVO
+        INACTIVO,
+        CODIGO
     }
 
     public void setControlador(ControladorArticulos controlador) {
@@ -158,14 +160,29 @@ public class ArticulosVista extends javax.swing.JFrame implements IVista<Articul
         menuConsulta.setText("Consulta");
 
         consultaPorCodigo.setText("Por Codigo");
+        consultaPorCodigo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                consultaPorCodigoMousePressed(evt);
+            }
+        });
         menuConsulta.add(consultaPorCodigo);
 
         menuListados.setText("Listado");
 
         listadoPorCodigo.setText("Por Codigo");
+        listadoPorCodigo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listadoPorCodigoMousePressed(evt);
+            }
+        });
         menuListados.add(listadoPorCodigo);
 
         listadoEntreCodigos.setText("Entre Codigos");
+        listadoEntreCodigos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listadoEntreCodigosMousePressed(evt);
+            }
+        });
         menuListados.add(listadoEntreCodigos);
 
         listadoGraficos.setText("Grafico");
@@ -278,6 +295,12 @@ public class ArticulosVista extends javax.swing.JFrame implements IVista<Articul
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !campoCodigo.getText().isEmpty()) {
             controlador.verificarCodigo(modo);
+            if (modo == MODO.CODIGO) {
+                // Activar solo el botón de "Salir"
+                botonSalir.setEnabled(true);
+                botonAceptar.setEnabled(false);
+                botonCancelar.setEnabled(false);
+            }
         }
     }//GEN-LAST:event_campoCodigoKeyPressed
 
@@ -286,6 +309,38 @@ public class ArticulosVista extends javax.swing.JFrame implements IVista<Articul
         modo = MODO.ALTA;
         cancelarAccion();
     }//GEN-LAST:event_menuAltaMousePressed
+
+    private void consultaPorCodigoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_consultaPorCodigoMousePressed
+        // TODO add your handling code here:
+        modo = MODO.CODIGO;
+        cancelarAccion();
+    }//GEN-LAST:event_consultaPorCodigoMousePressed
+
+    private void listadoPorCodigoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listadoPorCodigoMousePressed
+        // TODO add your handling code here:
+        String urlOrigen = "src/main/java/reports/listadoPorCodigoArticulos.jasper";
+        String urlDestino = "src/main/java/reports/listadoPorCodigoArticulos.pdf";
+        InformeJasper.getInstance().mostrarInforme(urlOrigen, urlDestino);
+    }//GEN-LAST:event_listadoPorCodigoMousePressed
+
+    private void listadoEntreCodigosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listadoEntreCodigosMousePressed
+        // TODO add your handling code here:
+        try {
+
+            int codInicio = Integer.parseInt(JOptionPane.showInputDialog(this, "Código de inicio:"));
+            int codFin = Integer.parseInt(JOptionPane.showInputDialog(this, "Código de fin:"));
+            String urlOrigen = "src/main/java/reports/informeEntreCodigosArticulos.jasper";
+            String urlDestino = "src/main/java/reports/informeEntreCodigosArticulos.pdf";
+            if (codInicio > codFin) {
+                JOptionPane.showMessageDialog(this, "El codigo de incio debe ser menor o igual al del fin.");
+                return;
+            }
+
+            InformeJasper.getInstance().mostrarInformeEntreCodigos(urlOrigen, urlDestino, codInicio, codFin);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "EPor favor, introduce un numero valido.");
+        }
+    }//GEN-LAST:event_listadoEntreCodigosMousePressed
 
     /**
      * @param args the command line arguments

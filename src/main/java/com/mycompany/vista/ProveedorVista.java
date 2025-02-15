@@ -7,6 +7,7 @@ import com.mycompany.modelo.dao.clases.ClienteDAOImpl;
 import com.mycompany.modelo.entidades.Proveedor;
 import com.mycompany.vista.ClienteVista;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
+import com.mycompany.modelo.utils.InformeJasper;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -84,7 +85,8 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
         ALTA,
         BAJA,
         MODIFICACION,
-        INACTIVO
+        INACTIVO,
+        CODIGO
     }
 
     public void setControlador(ControladorProveedor controlador) {
@@ -178,7 +180,7 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         botonVolver = new javax.swing.JMenuItem();
         menuConsultas = new javax.swing.JMenu();
-        informaCodigo = new javax.swing.JMenuItem();
+        porCodigo = new javax.swing.JMenuItem();
         menuListados = new javax.swing.JMenu();
         listadoPorCodigo = new javax.swing.JMenuItem();
         listadoEntreCodigos = new javax.swing.JMenuItem();
@@ -259,18 +261,38 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
 
         menuConsultas.setText("Consultas");
 
-        informaCodigo.setText("Por Codigo");
-        menuConsultas.add(informaCodigo);
+        porCodigo.setText("Por Codigo");
+        porCodigo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                porCodigoMousePressed(evt);
+            }
+        });
+        menuConsultas.add(porCodigo);
 
         menuListados.setText("Listados");
 
         listadoPorCodigo.setText("Por Codigo");
+        listadoPorCodigo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listadoPorCodigoMousePressed(evt);
+            }
+        });
         menuListados.add(listadoPorCodigo);
 
         listadoEntreCodigos.setText("Entre Codigos");
+        listadoEntreCodigos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listadoEntreCodigosMousePressed(evt);
+            }
+        });
         menuListados.add(listadoEntreCodigos);
 
         listadoGrafico.setText("Grafico");
+        listadoGrafico.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listadoGraficoMousePressed(evt);
+            }
+        });
         menuListados.add(listadoGrafico);
 
         menuConsultas.add(menuListados);
@@ -420,8 +442,52 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !campoCodigo.getText().isEmpty()) {
             controlador.verificarCodigo(modo);
+            if (modo == MODO.CODIGO) {
+                // Activar solo el botón de "Salir"
+                botonSalir.setEnabled(true);
+                botonAceptar.setEnabled(false);
+                botonCancelar.setEnabled(false);
+            }
         }
     }//GEN-LAST:event_campoCodigoKeyPressed
+
+    private void porCodigoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_porCodigoMousePressed
+        // TODO add your handling code here:
+        modo = MODO.CODIGO;
+        cancelarAccion();
+    }//GEN-LAST:event_porCodigoMousePressed
+
+    private void listadoPorCodigoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listadoPorCodigoMousePressed
+        // TODO add your handling code here:
+        String urlOrigen = "src/main/java/reports/listadoPorCodigoProveedor.jasper";
+        String urlDestino = "src/main/java/reports/listadoPorCodigoProveedor.pdf";
+        InformeJasper.getInstance().mostrarInforme(urlOrigen, urlDestino);
+    }//GEN-LAST:event_listadoPorCodigoMousePressed
+
+    private void listadoEntreCodigosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listadoEntreCodigosMousePressed
+        // TODO add your handling code here:
+        try {
+
+            int codInicio = Integer.parseInt(JOptionPane.showInputDialog(this, "Código de inicio:"));
+            int codFin = Integer.parseInt(JOptionPane.showInputDialog(this, "Código de fin:"));
+            String urlOrigen = "src/main/java/reports/informeEntreCodigosProveedores.jasper";
+            String urlDestino = "src/main/java/reports/informeEntreCodigosProveedores.pdf";
+            if (codInicio > codFin) {
+                JOptionPane.showMessageDialog(this, "El codigo de incio debe ser menor o igual al del fin.");
+                return;
+            }
+
+            InformeJasper.getInstance().mostrarInformeEntreCodigos(urlOrigen, urlDestino, codInicio, codFin);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "EPor favor, introduce un numero valido.");
+        }
+    }//GEN-LAST:event_listadoEntreCodigosMousePressed
+
+    private void listadoGraficoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listadoGraficoMousePressed
+        // TODO add your handling code here:
+        InformeJasper.getInstance().mostrarInforme("src/main/java/reports/graficoProveedor.jasper", "reportes/grafico.pdf");
+
+    }//GEN-LAST:event_listadoGraficoMousePressed
 
     /**
      * @param args the command line arguments
@@ -477,7 +543,6 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
     private javax.swing.JTextField campoNombre;
     private javax.swing.JTextField campoTelefono;
     private javax.swing.JTextField campoTotalCompras;
-    private javax.swing.JMenuItem informaCodigo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -501,6 +566,7 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
     private javax.swing.JMenu menuConsultas;
     private javax.swing.JMenu menuListados;
     private javax.swing.JMenuItem menuModificacion;
+    private javax.swing.JMenuItem porCodigo;
     // End of variables declaration//GEN-END:variables
 
     @Override

@@ -7,6 +7,7 @@ import com.mycompany.modelo.entidades.Cliente;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
+import com.mycompany.modelo.utils.InformeJasper;
 import com.mycompany.utils.JDBC;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
@@ -37,7 +38,8 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         ALTA,
         BAJA,
         MODIFICACION,
-        INACTIVO
+        INACTIVO,
+        CODIGO
     }
 
     public void setControlador(ControladorCliente controlador) {
@@ -233,9 +235,19 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         jMenu1.add(listadoPorCodigo);
 
         listadoEntreCodigos.setText("Entre códigos");
+        listadoEntreCodigos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listadoEntreCodigosMousePressed(evt);
+            }
+        });
         jMenu1.add(listadoEntreCodigos);
 
         grafico.setText("Gráficos");
+        grafico.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                graficoMousePressed(evt);
+            }
+        });
         jMenu1.add(grafico);
 
         menuConsultas.add(jMenu1);
@@ -384,6 +396,13 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && !campoCodigo.getText().isEmpty()) {
             controlador.verificarCodigo(modo);
+
+            if (modo == MODO.CODIGO) {
+                // Activar solo el botón de "Salir"
+                botonSalir.setEnabled(true);
+                botonAceptar.setEnabled(false);
+                botonCancelar.setEnabled(false);
+            }
         }
     }//GEN-LAST:event_campoCodigoKeyPressed
 
@@ -395,12 +414,42 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
 
     private void menuPorCodigoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuPorCodigoMousePressed
         // TODO add your handling code here:
-        
+        modo = MODO.CODIGO;
+        cancelarAccion();
     }//GEN-LAST:event_menuPorCodigoMousePressed
 
     private void listadoPorCodigoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listadoPorCodigoMousePressed
         // TODO add your handling code here:
+        String urlOrigen = "src/main/java/reports/listadoPorCodigo.jasper";
+        String urlDestino = "src/main/java/reports/listadoPorCodigo.pdf";
+        InformeJasper.getInstance().mostrarInforme(urlOrigen, urlDestino);
     }//GEN-LAST:event_listadoPorCodigoMousePressed
+
+    private void listadoEntreCodigosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listadoEntreCodigosMousePressed
+        // TODO add your handling code here:
+        try {
+
+            int codInicio = Integer.parseInt(JOptionPane.showInputDialog(this, "Código de inicio:"));
+            int codFin = Integer.parseInt(JOptionPane.showInputDialog(this, "Código de fin:"));
+            String urlOrigen = "src/main/java/reports/informeEntreCodigos.jasper";
+            String urlDestino = "src/main/java/reports/informeEntreCodigo.pdf";
+            if (codInicio > codFin) {
+                JOptionPane.showMessageDialog(this, "El codigo de incio debe ser menor o igual al del fin.");
+                return;
+            }
+
+            InformeJasper.getInstance().mostrarInformeEntreCodigos(urlOrigen, urlDestino, codInicio, codFin);
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(this, "EPor favor, introduce un numero valido.");
+        }
+
+    }//GEN-LAST:event_listadoEntreCodigosMousePressed
+
+    private void graficoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_graficoMousePressed
+        // TODO add your handling code here:
+        InformeJasper.getInstance().mostrarInforme("src/main/java/reports/grafico.jasper", "reportes/grafico.pdf");
+
+    }//GEN-LAST:event_graficoMousePressed
 
     /**
      * @param args the command line arguments
@@ -484,7 +533,10 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
     private javax.swing.JMenu menuMantenimiento;
     private javax.swing.JMenuItem menuPorCodigo;
     // End of variables declaration//GEN-END:variables
-
+    
+    /*
+    Limpia los datos de los campos
+    */
     @Override
     public void limpiarCampos() {
         campoApellidos.setText("");
@@ -501,7 +553,10 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         campoTotalVentas.setText("");
         campoEmail.setText("");
     }
-
+    
+    /*
+    Activa o desactiva los campos segun el estado que se pasa
+    */
     @Override
     public void estadoCampos(boolean estado) {
         campoApellidos.setEnabled(estado);
@@ -536,12 +591,18 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         }
 
     }
-
+    
+    /*
+    Muestra un joptionpane con un mensaje
+    */
     @Override
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    
+    /*
+    Obtiene la entidad segun los datos que hay en el formulario
+    */
     @Override
     public Cliente obtenerEntidadDelFormulario() {
         // Construyes un Cliente con los datos actuales de la vista
@@ -572,7 +633,10 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         }
         return c;
     }
-
+    
+    /*
+    Rellena los datos del formulario un cliente 
+    */
     @Override
     public void mostrarEntidad(Cliente entidad) {
         if (entidad == null) {
@@ -595,7 +659,11 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         campoEmail.setText(entidad.getEmail());
         campoTotalVentas.setText(String.valueOf(entidad.getTotalVentas()));
     }
-
+    
+    
+    /*
+    Devuelve el codigo que hay en el campo codigo
+    */
     @Override
     public int obtenerCodigoEntidad() {
         // Lee el campo y devuelve un entero
@@ -606,6 +674,9 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         }
     }
 
+    /*
+    Gestiona el formulario para que este en estado inicial
+    */
     @Override
     public void estadoInicial() {
         modo = MODO.INACTIVO;
@@ -613,13 +684,18 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
         campoTotalVentas.setEnabled(false);
         letraNif.setEnabled(false);
     }
-
+    
+    /*
+    Desactiva los campos (el de codigo segun el estado) y limpiar los campos
+    */
     @Override
     public void cancelarAccion() {
         limpiarCampos();
         estadoCampos(false);
     }
-
+    
+    
+    
     @Override
     public void limitarEntradaLetrasConLongitudMinYMax(JTextField campo, int min, int max) {
         campo.addKeyListener(new KeyAdapter() {
@@ -745,28 +821,28 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
                 break;
         }
     }
-    
+
     private void generarListadoPorCodigo() {
-    try {
-        // Cargar el archivo del reporte Jasper
-        JasperReport reporte = JasperCompileManager.compileReport("src/reports/ReportePorCodigo.jrxml");
+        try {
+            // Cargar el archivo del reporte Jasper
+            JasperReport reporte = JasperCompileManager.compileReport("src/reports/listadoPorCodigo.jrxml");
 
-        // Crear un mapa de parámetros
-        Map<String, Object> parametros = new HashMap<>();
-        parametros.put("codigo", Integer.parseInt(campoCodigo.getText())); // Obtener el código ingresado
+            // Crear un mapa de parámetros
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("codigo", Integer.parseInt(campoCodigo.getText())); // Obtener el código ingresado
 
-        // Llenar el informe con datos desde la BD
-        JasperPrint print = JasperFillManager.fillReport(reporte, parametros, JDBC.getConnection());
+            // Llenar el informe con datos desde la BD
+            JasperPrint print = JasperFillManager.fillReport(reporte, parametros, JDBC.getConnection());
 
-        // Mostrar el informe en un visor
-        JasperViewer jasperViewer = new JasperViewer(print, false);
+            // Mostrar el informe en un visor
+            JasperViewer jasperViewer = new JasperViewer(print, false);
 
-        jasperViewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            jasperViewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             jasperViewer.setVisible(true);
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error al generar el listado por código.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al generar el listado por código.");
+        }
     }
-}
 
 }

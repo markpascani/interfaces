@@ -38,6 +38,7 @@ public class Inicio extends javax.swing.JFrame {
         menuClientes = new javax.swing.JMenuItem();
         menuProveedores = new javax.swing.JMenuItem();
         menuArticulos = new javax.swing.JMenuItem();
+        menuPedidos = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         opcionSalir = new javax.swing.JMenuItem();
 
@@ -68,6 +69,14 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
         menuMantenimientoInicial.add(menuArticulos);
+
+        menuPedidos.setText("Pedidos");
+        menuPedidos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                menuPedidosMousePressed(evt);
+            }
+        });
+        menuMantenimientoInicial.add(menuPedidos);
         menuMantenimientoInicial.add(jSeparator1);
 
         opcionSalir.setText("Salir");
@@ -120,6 +129,12 @@ public class Inicio extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_opcionSalirMousePressed
 
+    private void menuPedidosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuPedidosMousePressed
+        // TODO add your handling code here:
+        GestorVistas.mostrarPedidos();
+        this.dispose();
+    }//GEN-LAST:event_menuPedidosMousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -161,6 +176,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuArticulos;
     private javax.swing.JMenuItem menuClientes;
     private javax.swing.JMenu menuMantenimientoInicial;
+    private javax.swing.JMenuItem menuPedidos;
     private javax.swing.JMenuItem menuProveedores;
     private javax.swing.JMenuItem opcionSalir;
     // End of variables declaration//GEN-END:variables

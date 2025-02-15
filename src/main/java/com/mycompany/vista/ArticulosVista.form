@@ -51,6 +51,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Por Codigo"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="consultaPorCodigoMousePressed"/>
+              </Events>
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="menuListados">
               <Properties>
@@ -61,11 +64,17 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Por Codigo"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="listadoPorCodigoMousePressed"/>
+                  </Events>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="listadoEntreCodigos">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Entre Codigos"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="listadoEntreCodigosMousePressed"/>
+                  </Events>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="listadoGraficos">
                   <Properties>

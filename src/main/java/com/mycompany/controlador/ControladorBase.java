@@ -9,6 +9,7 @@ import com.mycompany.vista.interfaces.IVista;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 import com.mycompany.modelo.entidades.Proveedor;
 import com.mycompany.vista.ArticulosVista;
+import static com.mycompany.vista.ArticulosVista.MODO.CODIGO;
 import com.mycompany.vista.ClienteVista;
 import com.mycompany.vista.ProveedorVista;
 
@@ -122,6 +123,14 @@ public abstract class ControladorBase<T> {
                 vista.mostrarEntidad(entidad);
                 activarFormulario(true);
                 return true;
+            case CODIGO:
+                if (!existe) {
+                    vista.mostrarMensaje("El código no existe. No se puede mostrar nada.");
+                    return false;
+                }
+                T entidadNoModificanle = dao.obtenerPorID(codigo);
+                vista.mostrarEntidad(entidadNoModificanle);
+                return true;
             default:
                 return false;
         }
@@ -150,7 +159,14 @@ public abstract class ControladorBase<T> {
                     activarFormulario(true);
                     return true;
                 }
-
+            case CODIGO:
+                if (!existe) {
+                    vista.mostrarMensaje("El código no existe. No se puede mostrar nada.");
+                    return false;
+                }
+                T entidadNoModificanle = dao.obtenerPorID(codigo);
+                vista.mostrarEntidad(entidadNoModificanle);
+                return true;
             default:
                 return false;
         }
@@ -179,7 +195,14 @@ public abstract class ControladorBase<T> {
                     activarFormulario(true);
                     return true;
                 }
-
+            case CODIGO:
+                if (!existe) {
+                    vista.mostrarMensaje("El código no existe. No se puede mostrar nada.");
+                    return false;
+                }
+                T entidadNoModificanle = dao.obtenerPorID(codigo);
+                vista.mostrarEntidad(entidadNoModificanle);
+                return true;
             default:
                 return false;
         }
