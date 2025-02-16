@@ -16,14 +16,20 @@ import java.sql.SQLException;
  *
  * @author mihai
  */
-public class ArticuloDAOImpl implements IGenericDAO<Articulo, Integer>{
-     @Override
+public class ArticuloDAOImpl implements IGenericDAO<Articulo, Integer> {
+
+    private final Connection connection;
+
+    public ArticuloDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
+
+    @Override
     public boolean darDeAlta(Articulo articulo) {
         String sql = "INSERT INTO Articulos (codigo, descripcion, stock, stock_minimo, precio_compra, precio_venta) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = JDBC.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, articulo.getCodigo());
             statement.setString(2, articulo.getDescripcion());
@@ -44,8 +50,7 @@ public class ArticuloDAOImpl implements IGenericDAO<Articulo, Integer>{
     public boolean darDeBaja(Integer codigo) {
         String sql = "DELETE FROM Articulos WHERE codigo = ?";
 
-        try (Connection connection = JDBC.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, codigo);
             return statement.executeUpdate() > 0;
@@ -59,10 +64,9 @@ public class ArticuloDAOImpl implements IGenericDAO<Articulo, Integer>{
     @Override
     public boolean modificar(Articulo articulo) {
         String sql = "UPDATE Articulos SET descripcion = ?, stock = ?, stock_minimo = ?, precio_compra = ?, precio_venta = ? "
-                   + "WHERE codigo = ?";
+                + "WHERE codigo = ?";
 
-        try (Connection connection = JDBC.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, articulo.getDescripcion());
             statement.setFloat(2, articulo.getStock());
@@ -84,8 +88,7 @@ public class ArticuloDAOImpl implements IGenericDAO<Articulo, Integer>{
         String sql = "SELECT * FROM Articulos WHERE codigo = ?";
         Articulo articulo = null;
 
-        try (Connection connection = JDBC.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, codigo);
             ResultSet rs = statement.executeQuery();
@@ -110,8 +113,7 @@ public class ArticuloDAOImpl implements IGenericDAO<Articulo, Integer>{
     public boolean comprobarSiExistePorCodigo(Integer codigo) {
         String sql = "SELECT COUNT(*) FROM Articulos WHERE codigo = ?";
 
-        try (Connection connection = JDBC.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, codigo);
             ResultSet rs = statement.executeQuery();

@@ -34,7 +34,6 @@ public class InformeJasper {
         return instance;
 
     }
-   
 
     public void mostrarInforme(String urlOrigen, String urlDestino) {
 
@@ -55,8 +54,8 @@ public class InformeJasper {
             Logger.getLogger(InformeJasper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-     /**
+
+    /**
      * Genera un informe Jasper filtrado entre dos códigos.
      */
     public void mostrarInformeEntreCodigos(String urlOrigen, String urlDestino, int codigoInicio, int codigoFin) {
@@ -91,6 +90,26 @@ public class InformeJasper {
 
             JasperExportManager.exportReportToPdfFile(jasperPrint, urlDestino);
 
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            jasperViewer.setVisible(true);
+        } catch (JRException | SQLException ex) {
+            Logger.getLogger(InformeJasper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void mostrarInformeConParametros(String urlOrigen, Map<String, Object> parametros) {
+        try (Connection connection = JDBC.getConnection()) {
+            System.out.println("Conexión correcta para informe.");
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(urlOrigen, parametros, connection);
+
+            // Puedes exportarlo a PDF o mostrarlo directamente
+            // Por ejemplo, exportarlo a PDF:
+            String urlDestino = "src/main/java/reports/factura.pdf";
+            JasperExportManager.exportReportToPdfFile(jasperPrint, urlDestino);
+
+            // Mostrar el informe en un visor:
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             jasperViewer.setVisible(true);

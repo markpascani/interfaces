@@ -4,6 +4,7 @@ import com.mycompany.controlador.ControladorArticulos;
 import com.mycompany.modelo.entidades.Articulo;
 import com.mycompany.modelo.utils.InformeJasper;
 import com.mycompany.vista.interfaces.IVista;
+import com.mycompany.vista.interfaces.PedidoListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
@@ -21,6 +22,11 @@ public class ArticulosVista extends javax.swing.JFrame implements IVista<Articul
 
     private ControladorArticulos controlador;
     private MODO modo = MODO.INACTIVO;
+
+    @Override
+    public void setPedidoListener(PedidoListener listener) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     public enum MODO {
         ALTA,

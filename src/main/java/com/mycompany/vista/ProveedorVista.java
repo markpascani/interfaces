@@ -8,6 +8,7 @@ import com.mycompany.modelo.entidades.Proveedor;
 import com.mycompany.vista.ClienteVista;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 import com.mycompany.modelo.utils.InformeJasper;
+import com.mycompany.vista.interfaces.PedidoListener;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -79,6 +80,11 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
             default:
                 break;
         }
+    }
+
+    @Override
+    public void setPedidoListener(PedidoListener listener) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public enum MODO {
@@ -516,7 +522,6 @@ public class ProveedorVista extends javax.swing.JFrame implements IVistaConNIF<P
         }
         //</editor-fold>
         //</editor-fold>
-        IGenericDAO clienteDAO = new ClienteDAOImpl();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

@@ -14,19 +14,26 @@ import java.sql.SQLException;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 
 /**
- *  Implementa la logica de acceso a la base de datos para la tabla cliente
+ * Implementa la logica de acceso a la base de datos para la tabla cliente
+ *
  * @author mihai
  */
-public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
+public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer> {
+
+    private final Connection connection;
+
+    public ClienteDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public boolean darDeAlta(Cliente cliente) {
         String sql = "INSERT INTO Clientes "
                 + "(codigo, nif, apellidos, nombre, domicilio, codigo_postal, localidad, telefono, movil, fax, email, total_venta) "
                 + "values (?,?,?,?,?,?,?,?,?,?,?,?)";
-        try(Connection connection = JDBC.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)){
-            
+        try (
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+
             statement.setInt(1, cliente.getCodigo());
             statement.setString(2, cliente.getNif());
             statement.setString(3, cliente.getApellidos());
@@ -39,11 +46,11 @@ public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
             statement.setString(10, cliente.getFax());
             statement.setString(11, cliente.getEmail());
             statement.setFloat(12, 0);
-            
+
             return statement.executeUpdate() > 0;
-    
-        }catch(SQLException e){
-            System.err.println("Error en la base de datos.-> "+e.getMessage());
+
+        } catch (SQLException e) {
+            System.err.println("Error en la base de datos.-> " + e.getMessage());
             return false;
         }
     }
@@ -51,12 +58,12 @@ public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
     @Override
     public boolean darDeBaja(Integer codigoCliente) {
         String sql = "DELETE FROM Clientes WHERE codigo = ?";
-        try(Connection connection = JDBC.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)){
+        try (
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, codigoCliente);
             return statement.executeUpdate() > 0;
-        }catch(SQLException e){
-            System.err.println("Error en la base de datos.-> "+e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("Error en la base de datos.-> " + e.getMessage());
             return false;
         }
     }
@@ -72,11 +79,12 @@ public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
                 + "telefono = ?, "
                 + "fax = ?,"
                 + "movil = ?,"
-                + "email = ?"
+                + "email = ?,"
+                + "total_venta = ?"
                 + "WHERE codigo = ?";
-        
-        try(Connection connection = JDBC.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)){
+
+        try (
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, cliente.getNombre());
             statement.setString(2, cliente.getApellidos());
             statement.setString(3, cliente.getDomicilio());
@@ -86,16 +94,16 @@ public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
             statement.setString(7, cliente.getFax());
             statement.setString(8, cliente.getMovil());
             statement.setString(9, cliente.getEmail());
-            statement.setInt(10, cliente.getCodigo());
-            
+            statement.setFloat(10, cliente.getTotalVentas());
+            statement.setInt(11, cliente.getCodigo());
+
             return statement.executeUpdate() > 0;
-            
-        }catch(SQLException e){
-            System.err.println("Error en la base de datos.-> "+e.getMessage());
+
+        } catch (SQLException e) {
+            System.err.println("Error en la base de datos.-> " + e.getMessage());
             return false;
         }
     }
-    
 
     @Override
     public Cliente obtenerPorID(Integer codigoCliente) {
@@ -103,12 +111,12 @@ public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
         String sql = "SELECT codigo, nif, apellidos, nombre, domicilio, codigo_postal, localidad, telefono, movil, fax, email, total_venta"
                 + " FROM Clientes WHERE "
                 + "codigo = ?";
-        
-        try(Connection connection = JDBC.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)){
+
+        try (
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, codigoCliente);
             ResultSet rs = statement.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 cliente.setCodigo(rs.getInt("codigo"));
                 cliente.setNif(rs.getString("nif"));
                 cliente.setApellidos(rs.getString("apellidos"));
@@ -121,11 +129,11 @@ public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
                 cliente.setFax(rs.getString("fax"));
                 cliente.setEmail(rs.getString("email"));
                 cliente.setTotalVentas(rs.getFloat("total_venta"));
-                
+
                 return cliente;
             }
-        }catch(SQLException e){
-            System.err.println("Error en la base de datos.-> "+e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("Error en la base de datos.-> " + e.getMessage());
         }
         return null;
     }
@@ -133,19 +141,20 @@ public class ClienteDAOImpl implements IGenericDAO<Cliente, Integer>{
     @Override
     public boolean comprobarSiExistePorCodigo(Integer codigoCliente) {
         String sql = "SELECT COUNT(codigo) FROM Clientes WHERE codigo = ?";
-        try(Connection connection = JDBC.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)){
+        try (
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, codigoCliente);
             ResultSet rs = statement.executeQuery();
-            
-            if(rs.next() && rs.getInt(1) > 0) return true;
-            else return false;
-        }catch(Exception e){
-            System.err.println("Error en la base de datos.-> "+e.getMessage());
+
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            System.err.println("Error en la base de datos.-> " + e.getMessage());
             return false;
         }
     }
-    
-  
-    
+
 }

@@ -6,7 +6,7 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="opcionVolver">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Volver"/>
+            <Property name="text" type="java.lang.String" value="Pedidos"/>
           </Properties>
           <Events>
             <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="opcionVolverMousePressed"/>
@@ -24,9 +24,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator2">
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+            <MenuItem class="javax.swing.JMenuItem" name="Volver">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jMenuItem3"/>
+                <Property name="text" type="java.lang.String" value="Volver"/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -85,10 +85,10 @@
                           <Component id="jLabel4" min="-2" pref="61" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="campoCP" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel6" alignment="0" min="-2" pref="61" max="-2" attributes="0"/>
+                                  <Component id="jLabel6" min="-2" pref="61" max="-2" attributes="0"/>
+                                  <Component id="campoCP" min="-2" pref="50" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="campoLocalidad" alignment="0" min="-2" pref="138" max="-2" attributes="0"/>
                                   <Component id="jLabel7" alignment="0" min="-2" pref="61" max="-2" attributes="0"/>

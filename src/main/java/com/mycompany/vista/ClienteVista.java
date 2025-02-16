@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import com.mycompany.modelo.dao.interfaces.IGenericDAO;
 import com.mycompany.modelo.utils.InformeJasper;
 import com.mycompany.utils.JDBC;
+import com.mycompany.vista.interfaces.PedidoListener;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.util.HashMap;
@@ -33,6 +34,11 @@ public class ClienteVista extends javax.swing.JFrame implements IVistaConNIF<Cli
 
     private ControladorCliente controlador;
     private MODO modo = MODO.INACTIVO;
+
+    @Override
+    public void setPedidoListener(PedidoListener listener) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     public enum MODO {
         ALTA,

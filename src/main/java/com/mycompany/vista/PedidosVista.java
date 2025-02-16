@@ -4,21 +4,54 @@
  */
 package com.mycompany.vista;
 
+import com.mycompany.modelo.entidades.Articulo;
+import com.mycompany.modelo.entidades.Cliente;
 import com.mycompany.modelo.entidades.Pedido;
+import com.mycompany.modelo.entidades.Proveedor;
 import com.mycompany.vista.interfaces.IVista;
+import com.mycompany.vista.interfaces.PedidoListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 /**
  *
  * @author Mihai Stinga
  */
-public class PedidosVista extends javax.swing.JFrame implements IVista<Pedido>{
+public class PedidosVista extends javax.swing.JFrame implements IVista<Pedido> {
 
-    /**
-     * Creates new form PedidosVista
-     */
+    // Modo actual de la vista
+    public enum MODO {
+        CLIENTE,
+        PROVEEDOR,
+        INICIAL,
+    }
+    private MODO modo;
+    private boolean pedido;
+    private PedidoListener listener;
+
+    public boolean isPedido() {
+        return pedido;
+    }
+
+    public void setPedido(boolean pedido) {
+        this.pedido = pedido;
+    }
+
+    // Constructor
     public PedidosVista() {
         initComponents();
+        estadoInicial();
+        configurarEventos();
     }
 
     /**
@@ -69,7 +102,7 @@ public class PedidosVista extends javax.swing.JFrame implements IVista<Pedido>{
         menuCliente = new javax.swing.JMenuItem();
         menuProveedor = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        Volver = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -142,7 +175,7 @@ public class PedidosVista extends javax.swing.JFrame implements IVista<Pedido>{
 
         botonSalir.setText("Salir");
 
-        opcionVolver.setText("Volver");
+        opcionVolver.setText("Pedidos");
         opcionVolver.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 opcionVolverMousePressed(evt);
@@ -156,8 +189,8 @@ public class PedidosVista extends javax.swing.JFrame implements IVista<Pedido>{
         opcionVolver.add(menuProveedor);
         opcionVolver.add(jSeparator2);
 
-        jMenuItem3.setText("jMenuItem3");
-        opcionVolver.add(jMenuItem3);
+        Volver.setText("Volver");
+        opcionVolver.add(Volver);
 
         jMenuBar1.add(opcionVolver);
 
@@ -191,9 +224,9 @@ public class PedidosVista extends javax.swing.JFrame implements IVista<Pedido>{
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(campoCP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(42, 42, 42)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(campoCP, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(45, 45, 45)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(campoLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -374,90 +407,322 @@ public class PedidosVista extends javax.swing.JFrame implements IVista<Pedido>{
         });
     }
 
+// ------------------------------------------------------------------------
+    // Métodos de la Interfaz IVista<Pedido>
+    // ------------------------------------------------------------------------
     @Override
     public void mostrarMensaje(String mensaje) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        JOptionPane.showMessageDialog(this, mensaje);
     }
 
+    /**
+     * Limpia los campos según el modo: - MODO.INICIAL/CLIENTE/PROVEEDOR: limpia
+     * TODOS los campos - MODO.PEDIDO: limpia sólo la parte de artículo.
+     */
     @Override
     public void limpiarCampos() {
-        campoApellidos.setText("");
-        campoArticulo.setText("");
-        campoCP.setText("");
-        campoCodigo.setText("");
-        campoDescripcion.setText("");
-        campoDomicilio.setText("");
-        campoImporte.setText("");
-        campoLocalidad.setText("");
-        campoNIF.setText("");
-        campoNombre.setText("");
-        campoPrecio.setText("");
-        campoStock.setText("");
-        campoTotal.setText("");
-        campoUnidades.setText("");
+        if (!pedido) {
+            // Limpiamos absolutamente todo
+            campoCodigo.setText("");
+            campoNIF.setText("");
+            campoNombre.setText("");
+            campoApellidos.setText("");
+            campoDomicilio.setText("");
+            campoCP.setText("");
+            campoLocalidad.setText("");
+            campoTotal.setText("");
+
+            campoArticulo.setText("");
+            campoDescripcion.setText("");
+            campoUnidades.setText("");
+            campoStock.setText("");
+            campoPrecio.setText("");
+            campoImporte.setText("");
+        } else {
+            // Limpiamos únicamente los campos de artículo
+            campoArticulo.setText("");
+            campoDescripcion.setText("");
+            campoUnidades.setText("");
+            campoStock.setText("");
+            campoPrecio.setText("");
+            campoImporte.setText("");
+        }
     }
 
+    /**
+     * Habilita/deshabilita campos según el modo: - En MODO.CLIENTE/PROVEEDOR se
+     * habilita 'campoCodigo' y se deshabilitan resto. - En MODO.PEDIDO se
+     * habilitan los campos de artículo/unidades.
+     */
     @Override
     public void estadoCampos(boolean estado) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // Caso 1: MODO.CLIENTE/PROVEEDOR
+        if ((modo == MODO.CLIENTE || modo == MODO.PROVEEDOR)&& !pedido) {
+            // Habilitamos el campo del código
+            campoCodigo.setEnabled(estado);
+
+            // Deshabilitamos campos de artículos
+            campoArticulo.setEnabled(!estado);
+            campoDescripcion.setEnabled(false);
+            campoUnidades.setEnabled(!estado);
+            campoStock.setEnabled(false);
+            campoPrecio.setEnabled(false);
+            campoImporte.setEnabled(false);
+
+            // Botones
+            botonAceptar.setEnabled(false);
+            botonCancelarPedido.setEnabled(false);
+            botonCancelarTodo.setEnabled(false);
+            botonFactura.setEnabled(false);
+        } // Caso 2: MODO.PEDIDO
+        else if ((modo == MODO.CLIENTE || modo == MODO.PROVEEDOR)&& pedido) {
+            // Deshabilitamos el campo del código de cliente/proveedor
+            campoCodigo.setEnabled(false);
+
+            // Habilitamos los campos de artículo/unidades
+            campoArticulo.setEnabled(true);
+            campoDescripcion.setEnabled(false);
+            campoUnidades.setEnabled(false);
+            campoStock.setEnabled(false);
+            campoPrecio.setEnabled(false);
+            campoImporte.setEnabled(false);
+
+            // Botones
+            botonAceptar.setEnabled(false);
+            botonCancelarPedido.setEnabled(true);
+            botonCancelarTodo.setEnabled(true);
+            botonFactura.setEnabled(false);
+        }
     }
 
-    @Override
-    public Pedido obtenerEntidadDelFormulario() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void mostrarEntidad(Pedido entidad) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public int obtenerCodigoEntidad() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
+    /**
+     * Al inicio la pantalla está sin modo (INICIAL), sólo botón Salir
+     * habilitado.
+     */
     @Override
     public void estadoInicial() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.modo = MODO.INICIAL;
+        this.pedido = false;
+        limpiarCampos();
+
+        // Solo el botón Salir está disponible
+        botonSalir.setEnabled(true);
+        botonAceptar.setEnabled(false);
+        botonCancelarPedido.setEnabled(false);
+        botonCancelarTodo.setEnabled(false);
+        botonFactura.setEnabled(false);
+
+        // Todos los campos inhabilitados
+        campoCodigo.setEnabled(false);
+        campoNIF.setEnabled(false);
+        campoNombre.setEnabled(false);
+        campoApellidos.setEnabled(false);
+        campoDomicilio.setEnabled(false);
+        campoCP.setEnabled(false);
+        campoLocalidad.setEnabled(false);
+        campoTotal.setEnabled(false);
+
+        campoArticulo.setEnabled(false);
+        campoDescripcion.setEnabled(false);
+        campoUnidades.setEnabled(false);
+        campoStock.setEnabled(false);
+        campoPrecio.setEnabled(false);
+        campoImporte.setEnabled(false);
     }
 
+    /**
+     * Si se cancela cualquier acción genérica, vuelve al estado inicial.
+     */
     @Override
     public void cancelarAccion() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void limitarEntradaLetrasConLongitudMinYMax(JTextField campo, int min, int max) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void limitarEntradaACifraConLongitudExacta(JTextField campo, int longitud) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void comprobarEmail(JTextField campo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void limitarEntradaALongitudMinYMax(JTextField campo, int min, int max) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        limpiarCampos();
+        estadoInicial();
     }
 
     @Override
     public void irAPaginaDeInicio() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // cerramos la ventana:
+        this.dispose();
+        new Inicio().setVisible(true);
+    }
+
+    /**
+     * Devuelve el código de cliente/proveedor que el usuario haya tecleado.
+     */
+    @Override
+    public int obtenerCodigoEntidad() {
+        try {
+            return Integer.parseInt(campoCodigo.getText().trim());
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    /**
+     * Devuelve el código del artículo que el usuario haya tecleado.
+     */
+    public int obtenerCodigoArticulo() {
+        try {
+            return Integer.parseInt(campoArticulo.getText().trim());
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 
     @Override
     public void enfocarCampo(String campo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // Para dirigir el foco a un componente concreto
+        switch (campo) {
+            case "codigo":
+                campoCodigo.requestFocus();
+                break;
+            case "articulo":
+                campoArticulo.requestFocus();
+                break;
+            case "unidades":
+                campoUnidades.requestFocus();
+                break;
+        }
     }
 
+    // ------------------------------------------------------------------------
+    // Métodos adicionales para mostrar datos de Cliente/Proveedor/Artículo
+    // ------------------------------------------------------------------------
+    public void mostrarDatosCliente(Cliente c) {
+        if (c == null) {
+            return;
+        }
+        campoNIF.setText(c.getNif());
+        campoNombre.setText(c.getNombre());
+        campoApellidos.setText(c.getApellidos());
+        campoDomicilio.setText(c.getDomicilio());
+        campoCP.setText(c.getCodigoPostal());
+        campoLocalidad.setText(c.getLocalidad());
+        // El enunciado habla de “Total Ventas” (campoTotal)
+        campoTotal.setText(String.valueOf(c.getTotalVentas()));
+    }
+
+    public void mostrarDatosProveedor(Proveedor p) {
+        if (p == null) {
+            return;
+        }
+        campoNIF.setText(p.getNif());
+        campoNombre.setText(p.getNombre());
+        campoApellidos.setText(p.getApellidos());
+        campoDomicilio.setText(p.getDomicilio());
+        campoCP.setText(p.getCodigoPostal());
+        campoLocalidad.setText(p.getLocalidad());
+        // El enunciado habla de “Total Compras” (campoTotal)
+        campoTotal.setText(String.valueOf(p.getTotalCompras()));
+    }
+
+    public void mostrarDatosArticulo(Articulo a) {
+        if (a == null) {
+            return;
+        }
+        campoDescripcion.setText(a.getDescripcion());
+        campoStock.setText(String.valueOf(a.getStock()));
+        // Según sea cliente/proveedor, mostramos precio de venta o compra
+        float precio = (modo == MODO.CLIENTE) ? a.getPrecioVenta() : a.getPrecioCompra();
+        campoPrecio.setText(String.valueOf(precio));
+        campoImporte.setText("");
+    }
+
+    //configuracion del pedido
+    // ------------------------------------------------------------------------
+    // Configuración de eventos y listeners
+    // ------------------------------------------------------------------------
+    private void configurarEventos() {
+        // Opción del menú para PEDIDOS -> Cliente
+        menuCliente.addActionListener((e) -> {
+            if (listener != null) {
+                listener.seleccionarModoCliente();
+            }
+        });
+
+        // Opción del menú para PEDIDOS -> Proveedor
+        menuProveedor.addActionListener((e) -> {
+            if (listener != null) {
+                listener.seleccionarModoProveedor();
+            }
+        });
+
+        // Opción del menú: Volver (regresa a la ventana principal)
+        Volver.addActionListener((e) -> {
+            if (listener != null) {
+                listener.volver();
+            }
+        });
+
+        // Pulsar ENTER en campoCodigo => validar el código de cliente/proveedor
+        campoCodigo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER && listener != null) {
+                    listener.validarCodigoEntidad();
+                }
+            }
+        });
+
+        // Pulsar ENTER en campoArticulo => validar artículo y mostrar datos
+        campoArticulo.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER && listener != null) {
+                    listener.validarArticulo();
+                }
+            }
+        });
+
+        // Pulsar ENTER en campoUnidades => calcular importe y habilitar botón Aceptar
+        campoUnidades.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER && listener != null) {
+                    listener.calcularImporte();
+                }
+            }
+        });
+
+        // BOTÓN ACEPTAR => Actualizar tablas, grabar pedido en histórico, etc.
+        botonAceptar.addActionListener((e) -> {
+            if (listener != null) {
+                listener.procesarPedido();
+            }
+        });
+
+        // BOTÓN Cancelar Pedido => limpiar sólo el “pedido actual” (artículo, unidades)
+        botonCancelarPedido.addActionListener((e) -> {
+            if (listener != null) {
+                listener.cancelarPedido();
+            }
+        });
+
+        // BOTÓN Cancelar Todo => rollback de toda la transacción
+        botonCancelarTodo.addActionListener((e) -> {
+            if (listener != null) {
+                listener.cancelarTodo();
+            }
+        });
+
+        // BOTÓN Factura => commit y emitir factura (cliente) o solo commit (proveedor)
+        botonFactura.addActionListener((e) -> {
+            if (listener != null) {
+                listener.generarFactura();
+            }
+        });
+
+        // BOTÓN Salir => rollback final y volver a la primera ventana
+        botonSalir.addActionListener((e) -> {
+            if (listener != null) {
+                listener.salir();
+            }
+        });
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem Volver;
     private javax.swing.JButton botonAceptar;
     private javax.swing.JButton botonCancelarPedido;
     private javax.swing.JButton botonCancelarTodo;
@@ -492,11 +757,376 @@ public class PedidosVista extends javax.swing.JFrame implements IVista<Pedido>{
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JMenuItem menuCliente;
     private javax.swing.JMenuItem menuProveedor;
     private javax.swing.JMenu opcionVolver;
     // End of variables declaration//GEN-END:variables
+
+    public PedidoListener getListener() {
+        return listener;
+    }
+
+    public void setListener(PedidoListener listener) {
+        this.listener = listener;
+    }
+
+    public JMenuItem getVolver() {
+        return Volver;
+    }
+
+    public void setVolver(JMenuItem Volver) {
+        this.Volver = Volver;
+    }
+
+    public JButton getBotonAceptar() {
+        return botonAceptar;
+    }
+
+    public void setBotonAceptar(JButton botonAceptar) {
+        this.botonAceptar = botonAceptar;
+    }
+
+    public JButton getBotonCancelarPedido() {
+        return botonCancelarPedido;
+    }
+
+    public void setBotonCancelarPedido(JButton botonCancelarPedido) {
+        this.botonCancelarPedido = botonCancelarPedido;
+    }
+
+    public JButton getBotonCancelarTodo() {
+        return botonCancelarTodo;
+    }
+
+    public void setBotonCancelarTodo(JButton botonCancelarTodo) {
+        this.botonCancelarTodo = botonCancelarTodo;
+    }
+
+    public JButton getBotonFactura() {
+        return botonFactura;
+    }
+
+    public void setBotonFactura(JButton botonFactura) {
+        this.botonFactura = botonFactura;
+    }
+
+    public JButton getBotonSalir() {
+        return botonSalir;
+    }
+
+    public void setBotonSalir(JButton botonSalir) {
+        this.botonSalir = botonSalir;
+    }
+
+    public JTextField getCampoApellidos() {
+        return campoApellidos;
+    }
+
+    public void setCampoApellidos(JTextField campoApellidos) {
+        this.campoApellidos = campoApellidos;
+    }
+
+    public JTextField getCampoArticulo() {
+        return campoArticulo;
+    }
+
+    public void setCampoArticulo(JTextField campoArticulo) {
+        this.campoArticulo = campoArticulo;
+    }
+
+    public JTextField getCampoCP() {
+        return campoCP;
+    }
+
+    public void setCampoCP(JTextField campoCP) {
+        this.campoCP = campoCP;
+    }
+
+    public JTextField getCampoCodigo() {
+        return campoCodigo;
+    }
+
+    public void setCampoCodigo(JTextField campoCodigo) {
+        this.campoCodigo = campoCodigo;
+    }
+
+    public JTextField getCampoDescripcion() {
+        return campoDescripcion;
+    }
+
+    public void setCampoDescripcion(JTextField campoDescripcion) {
+        this.campoDescripcion = campoDescripcion;
+    }
+
+    public JTextField getCampoDomicilio() {
+        return campoDomicilio;
+    }
+
+    public void setCampoDomicilio(JTextField campoDomicilio) {
+        this.campoDomicilio = campoDomicilio;
+    }
+
+    public JTextField getCampoImporte() {
+        return campoImporte;
+    }
+
+    public void setCampoImporte(JTextField campoImporte) {
+        this.campoImporte = campoImporte;
+    }
+
+    public JTextField getCampoLocalidad() {
+        return campoLocalidad;
+    }
+
+    public void setCampoLocalidad(JTextField campoLocalidad) {
+        this.campoLocalidad = campoLocalidad;
+    }
+
+    public JTextField getCampoNIF() {
+        return campoNIF;
+    }
+
+    public void setCampoNIF(JTextField campoNIF) {
+        this.campoNIF = campoNIF;
+    }
+
+    public JTextField getCampoNombre() {
+        return campoNombre;
+    }
+
+    public void setCampoNombre(JTextField campoNombre) {
+        this.campoNombre = campoNombre;
+    }
+
+    public JTextField getCampoPrecio() {
+        return campoPrecio;
+    }
+
+    public void setCampoPrecio(JTextField campoPrecio) {
+        this.campoPrecio = campoPrecio;
+    }
+
+    public JTextField getCampoStock() {
+        return campoStock;
+    }
+
+    public void setCampoStock(JTextField campoStock) {
+        this.campoStock = campoStock;
+    }
+
+    public JTextField getCampoTotal() {
+        return campoTotal;
+    }
+
+    public void setCampoTotal(JTextField campoTotal) {
+        this.campoTotal = campoTotal;
+    }
+
+    public JTextField getCampoUnidades() {
+        return campoUnidades;
+    }
+
+    public void setCampoUnidades(JTextField campoUnidades) {
+        this.campoUnidades = campoUnidades;
+    }
+
+    public JLabel getjLabel1() {
+        return jLabel1;
+    }
+
+    public void setjLabel1(JLabel jLabel1) {
+        this.jLabel1 = jLabel1;
+    }
+
+    public JLabel getjLabel10() {
+        return jLabel10;
+    }
+
+    public void setjLabel10(JLabel jLabel10) {
+        this.jLabel10 = jLabel10;
+    }
+
+    public JLabel getjLabel11() {
+        return jLabel11;
+    }
+
+    public void setjLabel11(JLabel jLabel11) {
+        this.jLabel11 = jLabel11;
+    }
+
+    public JLabel getjLabel12() {
+        return jLabel12;
+    }
+
+    public void setjLabel12(JLabel jLabel12) {
+        this.jLabel12 = jLabel12;
+    }
+
+    public JLabel getjLabel13() {
+        return jLabel13;
+    }
+
+    public void setjLabel13(JLabel jLabel13) {
+        this.jLabel13 = jLabel13;
+    }
+
+    public JLabel getjLabel14() {
+        return jLabel14;
+    }
+
+    public void setjLabel14(JLabel jLabel14) {
+        this.jLabel14 = jLabel14;
+    }
+
+    public JLabel getjLabel2() {
+        return jLabel2;
+    }
+
+    public void setjLabel2(JLabel jLabel2) {
+        this.jLabel2 = jLabel2;
+    }
+
+    public JLabel getjLabel3() {
+        return jLabel3;
+    }
+
+    public void setjLabel3(JLabel jLabel3) {
+        this.jLabel3 = jLabel3;
+    }
+
+    public JLabel getjLabel4() {
+        return jLabel4;
+    }
+
+    public void setjLabel4(JLabel jLabel4) {
+        this.jLabel4 = jLabel4;
+    }
+
+    public JLabel getjLabel5() {
+        return jLabel5;
+    }
+
+    public void setjLabel5(JLabel jLabel5) {
+        this.jLabel5 = jLabel5;
+    }
+
+    public JLabel getjLabel6() {
+        return jLabel6;
+    }
+
+    public void setjLabel6(JLabel jLabel6) {
+        this.jLabel6 = jLabel6;
+    }
+
+    public JLabel getjLabel7() {
+        return jLabel7;
+    }
+
+    public void setjLabel7(JLabel jLabel7) {
+        this.jLabel7 = jLabel7;
+    }
+
+    public JLabel getjLabel8() {
+        return jLabel8;
+    }
+
+    public void setjLabel8(JLabel jLabel8) {
+        this.jLabel8 = jLabel8;
+    }
+
+    public JLabel getjLabel9() {
+        return jLabel9;
+    }
+
+    public void setjLabel9(JLabel jLabel9) {
+        this.jLabel9 = jLabel9;
+    }
+
+    public JMenuBar getjMenuBar1() {
+        return jMenuBar1;
+    }
+
+    public void setjMenuBar1(JMenuBar jMenuBar1) {
+        this.jMenuBar1 = jMenuBar1;
+    }
+
+    public JSeparator getjSeparator1() {
+        return jSeparator1;
+    }
+
+    public void setjSeparator1(JSeparator jSeparator1) {
+        this.jSeparator1 = jSeparator1;
+    }
+
+    public JPopupMenu.Separator getjSeparator2() {
+        return jSeparator2;
+    }
+
+    public void setjSeparator2(JPopupMenu.Separator jSeparator2) {
+        this.jSeparator2 = jSeparator2;
+    }
+
+    public JMenuItem getMenuCliente() {
+        return menuCliente;
+    }
+
+    public void setMenuCliente(JMenuItem menuCliente) {
+        this.menuCliente = menuCliente;
+    }
+
+    public JMenuItem getMenuProveedor() {
+        return menuProveedor;
+    }
+
+    public void setMenuProveedor(JMenuItem menuProveedor) {
+        this.menuProveedor = menuProveedor;
+    }
+
+    public JMenu getOpcionVolver() {
+        return opcionVolver;
+    }
+
+    public void setOpcionVolver(JMenu opcionVolver) {
+        this.opcionVolver = opcionVolver;
+    }
+
+    public void setPedidoListener(PedidoListener listener) {
+        this.listener = listener;
+    }
+
+    public void setModo(MODO modo) {
+        this.modo = modo;
+    }
+
+    public MODO getModo() {
+        return this.modo;
+    }
+
+    // Métodos de IVista que en este ejemplo no utilizamos
+    @Override
+    public void limitarEntradaLetrasConLongitudMinYMax(JTextField c, int m1, int m2) {
+    }
+
+    @Override
+    public void limitarEntradaACifraConLongitudExacta(JTextField c, int l) {
+    }
+
+    @Override
+    public void comprobarEmail(JTextField c) {
+    }
+
+    @Override
+    public void limitarEntradaALongitudMinYMax(JTextField c, int m1, int m2) {
+    }
+
+    @Override
+    public void mostrarEntidad(Pedido entidad) {
+    }
+
+    @Override
+    public Pedido obtenerEntidadDelFormulario() {
+        return null;
+    }
 }

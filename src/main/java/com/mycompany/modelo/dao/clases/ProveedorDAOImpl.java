@@ -18,12 +18,18 @@ import java.sql.SQLException;
  */
 public class ProveedorDAOImpl implements IGenericDAO<Proveedor, Integer> {
 
+    private final Connection connection;
+
+    public ProveedorDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public boolean darDeAlta(Proveedor proveedor) {
         String sql = "INSERT INTO Proveedores "
                 + "(codigo, nif, apellidos, nombre, domicilio, codigo_postal, localidad, telefono, movil, fax, email, total_compras) "
                 + "values (?,?,?,?,?,?,?,?,?,?,?,?)";
-        try (Connection connection = JDBC.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, proveedor.getCodigo());
             statement.setString(2, proveedor.getNif());
@@ -49,7 +55,7 @@ public class ProveedorDAOImpl implements IGenericDAO<Proveedor, Integer> {
     @Override
     public boolean darDeBaja(Integer codigoProveedor) {
         String sql = "DELETE FROM Proveedores WHERE codigo = ?";
-        try (Connection connection = JDBC.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, codigoProveedor);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -62,8 +68,8 @@ public class ProveedorDAOImpl implements IGenericDAO<Proveedor, Integer> {
     public boolean modificar(Proveedor proveedor) {
         String sql = "UPDATE Proveedores SET "
                 + "nombre = ?, apellidos = ?, domicilio = ?, codigo_postal = ?, localidad = ?, "
-                + "telefono = ?, fax = ?, movil = ?, email = ? WHERE codigo = ?";
-        try (Connection connection = JDBC.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+                + "telefono = ?, fax = ?, movil = ?, email = ?, total_compras = ? WHERE codigo = ?";
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, proveedor.getNombre());
             statement.setString(2, proveedor.getApellidos());
             statement.setString(3, proveedor.getDomicilio());
@@ -73,7 +79,8 @@ public class ProveedorDAOImpl implements IGenericDAO<Proveedor, Integer> {
             statement.setString(7, proveedor.getFax());
             statement.setString(8, proveedor.getMovil());
             statement.setString(9, proveedor.getEmail());
-            statement.setInt(10, proveedor.getCodigo());
+            statement.setFloat(10, proveedor.getTotalCompras());
+            statement.setInt(11, proveedor.getCodigo());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -86,7 +93,7 @@ public class ProveedorDAOImpl implements IGenericDAO<Proveedor, Integer> {
     public Proveedor obtenerPorID(Integer codigoProveedor) {
         Proveedor proveedor = new Proveedor();
         String sql = "SELECT * FROM Proveedores WHERE codigo = ?";
-        try (Connection connection = JDBC.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, codigoProveedor);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -114,7 +121,7 @@ public class ProveedorDAOImpl implements IGenericDAO<Proveedor, Integer> {
     @Override
     public boolean comprobarSiExistePorCodigo(Integer codigoProveedor) {
         String sql = "SELECT COUNT(codigo) FROM Proveedores WHERE codigo = ?";
-        try (Connection connection = JDBC.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+        try ( PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, codigoProveedor);
             ResultSet rs = statement.executeQuery();
             return rs.next() && rs.getInt(1) > 0;

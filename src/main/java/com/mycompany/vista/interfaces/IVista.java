@@ -14,7 +14,7 @@ import com.mycompany.modelo.entidades.Cliente;
  * @author mihai
  */
 public interface IVista<T> {
-
+    void setPedidoListener(PedidoListener listener);
     // Mostrar mensajes al usuario
     void mostrarMensaje(String mensaje);
 

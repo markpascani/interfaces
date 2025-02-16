@@ -11,52 +11,61 @@ import java.time.LocalDate;
  * @author Mihai Stinga
  */
 public class Pedido {
-    private int codigoPedido;
-    private int codigoCliente;
-    private int codigoProveedor;
-    private int codigoArticulo;
-    private int unidadesPedidas;
-    private LocalDate fechaPedido;
-    
-    
-    public Pedido(int codigoCliente, int codigoProveedor, int codigoArticulo, int unidadesPedidas, LocalDate fechaPedido) {
+    private int idPedido;              // 'id_pedido' en la BD (auto-increment)
+    private Integer codigoCliente;     // NULL si es pedido de proveedor
+    private Integer codigoProveedor;   // NULL si es pedido de cliente
+    private int codigoArticulo;        // Not null
+    private int unidades;             // Not null
+    private LocalDate fechaPedido;     // Fecha del pedido
+    private Integer numeroFactura;
+
+    public Pedido() { }
+
+    public Pedido(Integer codigoCliente, Integer codigoProveedor,
+                  int codigoArticulo, int unidades, LocalDate fechaPedido, Integer factura) {
         this.codigoCliente = codigoCliente;
         this.codigoProveedor = codigoProveedor;
         this.codigoArticulo = codigoArticulo;
-        this.unidadesPedidas = unidadesPedidas;
+        this.unidades = unidades;
         this.fechaPedido = fechaPedido;
+        this.numeroFactura = factura;
     }
 
-    public Pedido(int codigoPedido, int codigoCliente, int codigoProveedor, int codigoArticulo, int unidadesPedidas, LocalDate fechaPedido) {
-        this(codigoCliente,codigoProveedor, codigoArticulo, unidadesPedidas, fechaPedido);
-        this.codigoPedido = codigoPedido;
-    }
-    
-    
-    
-    
-
-    public int getCodigoPedido() {
-        return codigoPedido;
+    public Pedido(int idPedido, Integer codigoCliente, Integer codigoProveedor,
+                  int codigoArticulo, int unidades, LocalDate fechaPedido, Integer factura) {
+        this(codigoCliente, codigoProveedor, codigoArticulo, unidades, fechaPedido, factura);
+        this.idPedido = idPedido;
     }
 
-    public void setCodigoPedido(int codigoPedido) {
-        this.codigoPedido = codigoPedido;
+    public int getIdPedido() {
+        return idPedido;
     }
 
-    public int getCodigoCliente() {
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
+    }
+
+    public Integer getNumeroFactura() {
+        return numeroFactura;
+    }
+
+    public void setNumeroFactura(Integer factura) {
+        this.numeroFactura = factura;
+    }
+
+    public Integer getCodigoCliente() {
         return codigoCliente;
     }
 
-    public void setCodigoCliente(int codigoCliente) {
+    public void setCodigoCliente(Integer codigoCliente) {
         this.codigoCliente = codigoCliente;
     }
 
-    public int getCodigoProveedor() {
+    public Integer getCodigoProveedor() {
         return codigoProveedor;
     }
 
-    public void setCodigoProveedor(int codigoProveedor) {
+    public void setCodigoProveedor(Integer codigoProveedor) {
         this.codigoProveedor = codigoProveedor;
     }
 
@@ -68,12 +77,12 @@ public class Pedido {
         this.codigoArticulo = codigoArticulo;
     }
 
-    public int getUnidadesPedidas() {
-        return unidadesPedidas;
+    public int getUnidades() {
+        return unidades;
     }
 
-    public void setUnidadesPedidas(int unidadesPedidas) {
-        this.unidadesPedidas = unidadesPedidas;
+    public void setUnidades(int unidades) {
+        this.unidades = unidades;
     }
 
     public LocalDate getFechaPedido() {
@@ -83,7 +92,6 @@ public class Pedido {
     public void setFechaPedido(LocalDate fechaPedido) {
         this.fechaPedido = fechaPedido;
     }
-    
     
     
 }
